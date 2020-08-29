@@ -1,0 +1,31 @@
+# built binaries
+build
+
+# bitcode and analysis output
+*.ll
+*.out
+*.err
+*.cov
+*.delta
+*.cbi
+fuzz_output
+formula.smt2
+input.txt
+branch.txt
+log.txt
+
+*.out
+*.err
+simple0
+simple1
+branch0
+branch1
+fuzz0
+fuzz1
+fuzz2
+
+# vim
+.*.swp
+.ycm_extra_conf.py
+compile_commands.json
+*/.DS_Store
