@@ -1,8 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-// this file will require you to use a richer abstract domain to handle the false positives
-
 void bad() {
     int data;
     int* dataref = &data;

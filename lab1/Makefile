@@ -1,24 +1,23 @@
-TARGETS=test1 test2 test3 test4 fuzz_test1 fuzz_test2 sv-adapt
+TARGETS=test6
 
-.PRECIOUS: results/afl_logs/%/afl.out results/ikos_logs/%.ikos.int.out results/ikos_logs/%.ikos.dbm.out
+.PRECIOUS: results/afl_logs/%/out.txt results/ikos_logs/%_int_out.txt results/ikos_logs/%_dbm_out.txt
 
 all: ${TARGETS}
 
-results/afl_logs/%/afl.out: c_programs/%.c
-	AFL_DONT_OPTIMIZE=1 afl-gcc $< $ -o $*
+results/afl_logs/%/out.txt: c_programs/%.c
 	mkdir -p results/afl_logs/$*
-	-timeout 30s afl-fuzz -i afl_input -o afl_output ./$*  > $@
-	cp -r afl_output/ $* results/afl_logs/$*/ && rm -rf afl_output/* $*
+	AFL_DONT_OPTIMIZE=1 afl-gcc $< $ -o results/afl_logs/$*/$*
+	-timeout 30s afl-fuzz -i afl_input -o results/afl_logs/$*/out_dir results/afl_logs/$*/$* > $@
 
-results/ikos_logs/%.ikos.int.out: c_programs/%.c
+results/ikos_logs/%_int_out.txt: c_programs/%.c
 	mkdir -p results/ikos_logs
 	ikos --opt none -a dbz -d interval $< > $@
 
-results/ikos_logs/%.ikos.dbm.out: c_programs/%.c
+results/ikos_logs/%_dbm_out.txt: c_programs/%.c
 	mkdir -p results/ikos_logs
 	ikos --opt none -a dbz -d dbm $< > $@
 
-%: results/afl_logs/%/afl.out results/ikos_logs/%.ikos.int.out results/ikos_logs/%.ikos.dbm.out
+%: results/afl_logs/%/out.txt results/ikos_logs/%_int_out.txt results/ikos_logs/%_dbm_out.txt
 	
 
 submit:	f1_scores.txt compare.txt results/

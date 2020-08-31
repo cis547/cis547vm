@@ -1,37 +1,35 @@
-Follow these instructions to fill in the table below:
+Follow these instructions to fill in the table below.
 
-You are provided a suite of 15 C programs in directory lab1/test/ of
-the course VM.  Each program contains a single division instruction.
+Each of the 6 C programs test1.c thru test6.c contains a single division
+instruction.
 
 First, inspect the code of each program, and fill in its ground truth
-(Good/Bad) in the Ground Truth column: 
+(right/wrong) in the Ground Truth column: 
 
-- Good if the program does not contain any divide-by-zero errors.
-- Bad if the program contains a divide-by-zero error.
+- right if the program does not contain any divide-by-zero errors.
+- wrong if the program contains a divide-by-zero error.
 
-Next, refer to the logs of each analyzer's run on all programs and fill in its result
-(Accept/Reject) in the respective column:
+Next, refer to the logs of each analyzer's run on each program, and fill
+in its result (accept/reject) in the respective column:
 
-- Accept if your analyzer does not report any divide-by-zero errors.
-- Reject if your analyzer reports a divide-by-zero error.
+- accept if your analyzer does not report any divide-by-zero errors.
+- reject if your analyzer reports a divide-by-zero error.
 
-Lastly, use the above computed results to calculate the Precision,
-Recall, and F-Measure of each analyzer on this suite of programs.
+Lastly, use the above computed results to calculate Precision, Recall,
+and F-Measure scores for each analyzer on this suite of programs.
 
-
-
-====================================================================================
-  Program    |  Ground Truth  |       AFL      |  IKOS Interval  |    IKOS DBM     |
-====================================================================================
-test1.c      |                |                |                 |                 |
-test2.c      |                |                |                 |                 |
-test3.c      |                |                |                 |                 |
-test4.c      |                |                |                 |                 |
-fuzz_test1.c |                |                |                 |                 |
-fuzz_test2.c |                |                |                 |                 |
-====================================================================================
-Precision    |                |                |                 |                 |
-Recall       |                |                |                 |                 |
-F-measure    |                |                |                 |                 |
-====================================================================================
+========================================================================
+ Program  | Ground Truth |     AFL      | IKOS Interval |   IKOS DBM   |
+========================================================================
+test1.c   |              |              |               |              |
+test2.c   |              |              |               |              |
+test3.c   |              |              |               |              |
+test4.c   |              |              |               |              |
+test5.c   |              |              |               |              |
+test6.c   |              |              |               |              |
+========================================================================
+Precision |              |              |               |              |
+Recall    |              |              |               |              |
+F-measure |              |              |               |              |
+========================================================================
 
