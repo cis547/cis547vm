@@ -33,3 +33,20 @@ Recall    |              |              |               |              |
 F-measure |              |              |               |              |
 ========================================================================
 
+Answer the below questions regarding test7.c. Provide short explanations
+to justify your answers.
+
+Question 1: On which lines, if any, does it contain divide-by-zero errors?
+
+Answer:
+
+Question 2: On which lines, if any, does AFL report divide-by-zero errors?
+Justify your answer briefly.
+
+Answer:
+
+Question 3: What are the pros and cons of using the Interval versus DBM
+domains in IKOS on this program to find divide-by-zero errors?
+
+Answer:
+

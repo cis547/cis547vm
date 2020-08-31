@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-void bad() {
+void taz() {
     int data;
     int* dataref = &data;
     data = -1;
@@ -11,12 +11,11 @@ void bad() {
     }
     {
         int data = *dataref;
-        // possible divide by zero
         printf("%d", 100 / (data - 20));
     }
 }
 
-void goodG2B() {
+void bar() {
     int data;
     int* dataref = &data;
 
@@ -24,12 +23,11 @@ void goodG2B() {
     data = 7;
     {
         int data = *dataref;
-        // not a divide by zero
         printf("%d", 100 / (data - 20));
     }
 }
 
-void goodB2G() {
+void baz() {
     int data;
     int* dataref = &data;
 
@@ -41,26 +39,25 @@ void goodB2G() {
     {
         int data = *dataref;
         if(data < 0) {
-            // definitely not a divide by zero
             printf("%d", 100 / (data - 20));
         }
     }
 }
 
-void good()
+void foo()
 {
-    goodG2B();
-    goodB2G();
+    bar();
+    baz();
 }
 
 int main() {
-    printf("Calling good()...\n");
-    good();
-    printf("Finished good()\n");
+    printf("Entering foo()...\n");
+    foo();
+    printf("Finished foo()\n");
     
-    printf("Calling bad()...\n");
-    bad();
-    printf("Finished bad()\n");
+    printf("Entering taz()...\n");
+    taz();
+    printf("Finished taz()\n");
     
     return 0;
 }
