@@ -1,4 +1,4 @@
-TARGETS=test6
+TARGETS=test1 test2 test3 test4 test5 test6 test7
 
 .PRECIOUS: results/afl_logs/%/out.txt results/ikos_logs/%_int_out.txt results/ikos_logs/%_dbm_out.txt
 

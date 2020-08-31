@@ -11,6 +11,5 @@ int main() {
     for(int i = 0; i<sizeof(s)/2; i++)
         if(count[s[i] - 'a'] == 1)
             return i / (s[i/3]-k);
-        
     return 0;
 }
