@@ -1,4 +1,8 @@
-Follow these instructions to fill in the table below.
+Answer the questions in this file after running AFL and IKOS on the
+7 test programs. The questions are organized into two parts: Part A
+concerns test1 thru test6, and Part B concerns test7.
+
+Part A: Follow the below instructions to fill in the table below.
 
 Each of the 6 C programs test1.c thru test6.c contains a single division
 instruction.
@@ -33,20 +37,38 @@ Recall    |              |              |               |              |
 F-measure |              |              |               |              |
 ========================================================================
 
-Answer the below questions regarding test7.c. Provide short explanations
-to justify your answers.
+Part B: Answer the below questions regarding test7.c. Provide short
+explanations to justify your answers.
 
 Question 1: On which lines, if any, does it contain divide-by-zero errors?
 
 Answer:
+
+
+
+
+
 
 Question 2: On which lines, if any, does AFL report divide-by-zero errors?
 Justify your answer briefly.
 
 Answer:
 
+
+
+
+
+
+
 Question 3: What are the pros and cons of using the Interval versus DBM
 domains in IKOS on this program to find divide-by-zero errors?
 
 Answer:
+
+
+
+
+
+
+
 
