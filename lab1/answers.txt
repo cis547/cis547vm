@@ -50,7 +50,6 @@ Answer:
 
 
 Question 2: On which lines, if any, does AFL report divide-by-zero errors?
-Justify your answer briefly.
 
 Answer:
 
@@ -61,7 +60,8 @@ Answer:
 
 
 Question 3: What are the pros and cons of using the Interval versus DBM
-domains in IKOS on this program to find divide-by-zero errors?
+domains in IKOS on this program to find divide-by-zero errors?  Comment
+on both the accuracy and cost of the analyzer under these two domains.
 
 Answer:
 

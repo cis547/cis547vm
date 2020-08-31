@@ -2,7 +2,6 @@
 
 int main() {
     int K = getchar();
-    int div = getchar();
     char sum[65536];
     fgets(sum, sizeof(sum), stdin);
     for (int i=1; i<13; i++) sum[i]=sum[i-1]*5+1;
