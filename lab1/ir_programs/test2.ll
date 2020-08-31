@@ -14,20 +14,25 @@ entry:
   %call = call i32 @getchar()
   store i32 %call, i32* %a, align 4
   store i32 1, i32* %b, align 4
+  store i32 0, i32* %d, align 4
   %0 = load i32, i32* %a, align 4
-  %cmp = icmp ne i32 %0, 0
+  %cmp = icmp eq i32 %0, 0
   br i1 %cmp, label %if.then, label %if.end
 
 if.then:                                          ; preds = %entry
   %1 = load i32, i32* %b, align 4
-  %2 = load i32, i32* %a, align 4
-  %div = sdiv i32 %1, %2
+  %cmp1 = icmp sge i32 %1, 0
+  %conv = zext i1 %cmp1 to i32
+  store i32 %conv, i32* %a, align 4
+  %2 = load i32, i32* %b, align 4
+  %3 = load i32, i32* %a, align 4
+  %div = sdiv i32 %2, %3
   store i32 %div, i32* %d, align 4
   br label %if.end
 
 if.end:                                           ; preds = %if.then, %entry
-  %3 = load i32, i32* %retval, align 4
-  ret i32 %3
+  %4 = load i32, i32* %retval, align 4
+  ret i32 %4
 }
 
 declare dso_local i32 @getchar() #1
