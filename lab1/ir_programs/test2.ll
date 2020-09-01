@@ -31,8 +31,7 @@ if.then:                                          ; preds = %entry
   br label %if.end
 
 if.end:                                           ; preds = %if.then, %entry
-  %4 = load i32, i32* %retval, align 4
-  ret i32 %4
+  ret i32 0
 }
 
 declare dso_local i32 @getchar() #1
