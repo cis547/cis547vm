@@ -11,7 +11,6 @@ namespace instrument {
 
 struct Instrument : public FunctionPass {
   static char ID;
-  static const char *checkFunctionName;
 
   Instrument() : FunctionPass(ID) {}
 

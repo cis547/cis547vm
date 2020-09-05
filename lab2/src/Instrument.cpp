@@ -10,14 +10,14 @@ static const char *CoverageFunctionName = "__coverage__";
 /*
  * Implement divide-by-zero sanitizer.
  */
-void instrumentSanitize(Module *M, Function &F, Instruction &I) {
+void instrumentSanitize(Module *M, Instruction &I) {
   /* Add you code here */
 }
 
 /*
  * Implement code coverage instrumentation.
  */
-void instrumentCoverage(Module *M, Function &F, Instruction &I) {
+void instrumentCoverage(Module *M, Instruction &I) {
   /* Add you code here */
 }
 
