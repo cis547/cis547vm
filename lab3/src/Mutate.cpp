@@ -132,13 +132,9 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  if (argc == 5) {
-    Freq = strtol(argv[4], NULL, 10);
-  }
-
   int randomSeed = (int)time(NULL);
-  if (argc > 5) {
-    randomSeed = strtol(argv[5], NULL, 10);
+  if (argc > 4) {
+    randomSeed = strtol(argv[4], NULL, 10);
   }
   srand(randomSeed);
 
