@@ -109,7 +109,6 @@ void storeSeed(std::string &OutDir, int randomSeed) {
   File.close();
 }
 
-// ./fuzzer [exe file] [seed input dir] [output dir] [frequency] [random seed] 
 int main(int argc, char **argv) { 
   if (argc < 4) { 
     printf("usage %s [exe file] [seed input dir] [output dir] [seed (optional arg)]\n", argv[0]);
