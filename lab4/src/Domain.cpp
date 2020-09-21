@@ -6,6 +6,9 @@
 
 namespace dataflow {
 
+Domain::Domain() { Value = Uninit; }
+Domain::Domain(Element V) { Value = V; }
+
 Domain *Domain::add(Domain *E1, Domain *E2) {
   if (E1->Value == Uninit || E2->Value == Uninit)
     return new Domain(Uninit);
