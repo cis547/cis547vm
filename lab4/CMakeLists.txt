@@ -11,20 +11,22 @@ option(USE_REFERENCE "Build with reference solution" OFF)
 
 add_definitions(${LLVM_DEFINITIONS})
 include_directories(${LLVM_INCLUDE_DIRS} include)
-link_directories(${LLVM_LIBRARY_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
+link_directories(${LLVM_LIBRARY_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/reference)
+
 
 if (USE_REFERENCE)
+
+  find_library(HiddenAnalysis libHiddenAnalysis.a)
+
   message(STATUS "Use reference solution")
   add_llvm_library(DataflowPass MODULE
     src/DataflowAnalysis.cpp
     src/DivZeroAnalysis.cpp
+    src/Domain.cpp
   )
 
-  target_link_libraries(DataflowPass RefDomain)
+  target_link_libraries(DataflowPass HiddenAnalysis)
 
-  add_library(RefDomain MODULE
-    reference/RefDomain.cpp
-    )
 else (USE_REFERENCE)
   add_llvm_library(DataflowPass MODULE
   src/DataflowAnalysis.cpp
