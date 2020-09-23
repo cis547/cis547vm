@@ -18,9 +18,39 @@ namespace dataflow {
  * 1. Uncomment and implement "doAnalysis" that stores your results in "InMap" and "OutMap".
  * 2. Define "flowIn" that joins the memory set of all incoming flows
  * 3. Define "flowOut" that flows the memory set to all outgoing flows
- * 4. Define "join" to union two Memory objects, accounting for Domain value
+ * 4. Define "join" to union two Memory objects
  * 5. Define "equal" to compare two Memory objects
  */
+
+
+//<!---- START DEBUG FUNCTIONS ---->
+//
+// These debugging functions are provided for your convenience, but feel free 
+// to modify these however you like. These will not be graded.
+//
+void printMem(Memory *Mem) {
+  errs() << "[\n";
+  for (Memory::iterator V = Mem->begin(), VE = Mem->end(); V != VE; ++V) {
+    errs() << "  " << V->first << " => " << *V->second << ";\n";
+  }
+  errs() << "]\n";
+}
+
+void printMap(Function &F, ValueMap<Instruction *, Memory *> &InMap,
+              ValueMap<Instruction *, Memory *> &OutMap) {
+  errs() << "Dataflow Analysis Results:\n";
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    errs() << "Instruction: " << *I << "\n";
+    errs() << "In set: \n";
+    Memory *InMem = InMap[&(*I)];
+    printMem(InMem);
+    errs() << "Out set: \n";
+    Memory *OutMem = OutMap[&(*I)];
+    printMem(OutMem);
+    errs() << "\n";
+  }
+}
+//<!---- END DEBUG FUNCTIONS ---->
 
 
 /* PART 2: This function can used to evaluate Instruction::PHI */
@@ -45,7 +75,7 @@ Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
 }
 
 
-/* PART 2: This function is intended to return the union of two Memory objects (M1 and M2), accounting for Domain values */
+/* PART 2: Return the union of two Memory objects (M1 and M2), accounting for Domain values */
 Memory* join(Memory *M1, Memory *M2) {
   Memory* Result = new Memory();
   // Add your code here
@@ -53,7 +83,7 @@ Memory* join(Memory *M1, Memory *M2) {
 }
 
 
-/* PART 2: Return true if the two memories M1 and M2 are equal */
+/* PART 2: Return true if M1 is less than or equal to M2, i.e., M2 contains everything in M1 */
 bool equal(Memory *M1, Memory *M2) {
   // Add your code here
 }
