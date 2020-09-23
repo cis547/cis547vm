@@ -27,6 +27,7 @@ namespace dataflow {
 Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
   Value* cv = PHI->hasConstantValue();
   if(cv){
+    // Add your code here
     // eval cv, manipulate Mem, return
   }
   unsigned int n = PHI->getNumIncomingValues();
