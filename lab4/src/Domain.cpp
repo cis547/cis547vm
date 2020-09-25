@@ -80,7 +80,7 @@ Domain *Domain::join(Domain *E1, Domain *E2) {
   }
 }
 
-bool Domain::order(Domain E1, Domain E2) {
+bool Domain::equal(Domain E1, Domain E2) {
   return E1.Value == E2.Value;
 }
 
