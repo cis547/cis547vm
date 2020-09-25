@@ -81,13 +81,7 @@ Domain *Domain::join(Domain *E1, Domain *E2) {
 }
 
 bool Domain::order(Domain E1, Domain E2) {
-  if (E1.Value == Uninit)
-    return true;
-  if (E2.Value == MaybeZero)
-    return true;
-  if (E1.Value == E2.Value)
-    return true;
-  return false;
+  return E1.Value == E2.Value;
 }
 
 void Domain::print(raw_ostream &O) {
