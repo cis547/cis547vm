@@ -11,19 +11,20 @@ namespace dataflow {
  * see fit - it is not compulsory to use the following functions
  * 
  * PART 1
- * 1. Define "transfer" that computes the semantics of each instruction.
+ * 1. Define "transfer" that computes the semantics of each instruction. Also complete the
+ *    implementation of evalPhiNode.
  * 2. Define "check" that checks if a given instruction is erroneous or not.
  *
  * PART 2
  * 1. Uncomment and implement "doAnalysis" that stores your results in "InMap" and "OutMap".
- * 2. Define "flowIn" that joins the memory set of all incoming flows
- * 3. Define "flowOut" that flows the memory set to all outgoing flows
- * 4. Define "join" to union two Memory objects, accounting for Domain value
- * 5. Define "equal" to compare two Memory objects
+ * 2. Uncomment and implement "flowIn" that joins the memory set of all incoming flows
+ * 3. Uncomment and implement "flowOut" that flows the memory set to all outgoing flows
+ * 4. Uncomment and implement "join" to union two Memory objects, accounting for Domain value
+ * 5. Uncomment and implement "equal" to compare two Memory objects
  */
 
 
-/* PART 2: This function can used to evaluate Instruction::PHI */
+/* PART 1: This function can used to evaluate Instruction::PHI */
 Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
   Value* cv = PHI->hasConstantValue();
   if(cv){
@@ -45,24 +46,36 @@ Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
 }
 
 
-/* PART 2: This function is intended to return the union of two Memory objects (M1 and M2), accounting for Domain values */
+/* PART 2: This function is intended to return the union of two Memory objects (M1 and M2), accounting for Domain values
+           Uncomment and implement the join function when you start with PART 2
+ */
+/*
 Memory* join(Memory *M1, Memory *M2) {
   Memory* Result = new Memory();
   // Add your code here
   return Result;
 }
+*/
 
 
-/* PART 2: Return true if the two memories M1 and M2 are equal */
+/* PART 2: Return true if the two memories M1 and M2 are equal
+           Uncomment and implement the equal function when you start with PART 2
+ */
+/*
 bool equal(Memory *M1, Memory *M2) {
   // Add your code here
 }
+*/
 
 
-/* PART 2: Flow abstract domain from all predecessors of I into the In Memory object for I */
+/* PART 2: Flow abstract domain from all predecessors of I into the In Memory object for I.
+           Uncomment and implement the flowIn function when you start with PART 2
+ */
+/*
 void DivZeroAnalysis::flowIn(Instruction *I, Memory *In) {
   // Add your code here
 }
+*/
 
 
 /* PART 1: Create a transfer function that updates the Out Memory based on In Memory and the instruction type/parameters */
@@ -71,11 +84,14 @@ void DivZeroAnalysis::transfer(Instruction *I, const Memory *In, Memory *NOut) {
 }
 
 
-/* PART 2: For a given instruction, merge abstract domain from pre-transfer memory to post-transfer memory, and update WorkSet as needed */
+/* PART 2: For a given instruction, merge abstract domain from pre-transfer memory to post-transfer memory, and update WorkSet as needed
+           Uncomment and implement the flowOut function when you start with PART 2
+ */
+/*
 void DivZeroAnalysis::flowOut(Instruction *I, Memory *Pre, Memory *Post, SetVector <Instruction *> &WorkSet) {
   // Add your code here
 }
-
+*/
 
 /* 
 PART 2: Uncomment this function when starting part 2 in order to overwrite with your own
