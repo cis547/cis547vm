@@ -12,9 +12,8 @@ namespace dataflow {
 //===----------------------------------------------------------------------===//
 
 /*
- * Implement your pointer analysis. (Lab 6)
- * 1. Define "PointerAnalysis" that stores your results in "PointsTo".
- * 2. Define "alias" that checks whether two pointers may alias each other.
+ * 1. "PointerAnalysis" stores your results in "PointsTo".
+ * 2. "alias" checks whether two pointers may alias each other.
  */
 
 void transfer(Instruction *I, PointsToInfo &PointsTo) {
