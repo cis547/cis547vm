@@ -34,6 +34,7 @@ std::string address(Value *V) {
 DataflowAnalysis::DataflowAnalysis(char ID) : FunctionPass(ID) {}
 
 void DataflowAnalysis::collectErrorInsts(Function &F) {
+  ErrorInsts.clear();
   for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
     if (check(&*I))
       ErrorInsts.insert(&*I);
