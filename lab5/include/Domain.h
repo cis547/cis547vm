@@ -26,7 +26,7 @@ public:
   static Domain *mul(Domain *E1, Domain *E2);
   static Domain *div(Domain *E1, Domain *E2);
   static Domain *join(Domain *E1, Domain *E2);
-  static bool order(Domain E1, Domain E2);
+  static bool equal(Domain E1, Domain E2);
   void print(raw_ostream &O);
 };
 
