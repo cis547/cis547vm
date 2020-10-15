@@ -1,17 +1,15 @@
 #include <stdio.h>
 
-int main(){
-	int in = getchar();
-	int a = 0;
-	int b = 1;
-	int* x;
-
-	if(in < 10){
-		x = &a;
-	}else{
-		x = &b;
-	}
-
-	int s = b / *x; //divide by zero possible
-	return 0;
-}
+int f() {
+  int in = getchar();
+  int t = 10;
+  int *si = &in;
+  int *st = &t;
+  int **get = &si;
+  if (in - t > 0){
+	  get = &si;
+  }else{
+	  get = &st;
+  }
+  return in / **get;
+} 
