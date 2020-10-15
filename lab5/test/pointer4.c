@@ -1,13 +1,13 @@
 #include <stdio.h>
 
 int main(){
-	int a = 0;
-	int b = 1;
+	int a = 1;
+	int b = 0;
 	int* p = &a;
-	int* q = &b;
+	int** q = &p;
 
-	*p = *q;
+	p = &b;
 
-	int s = b / *p; //not a div by zero
+	int s = b / **q; //div by zero
 	return 0;
 }
