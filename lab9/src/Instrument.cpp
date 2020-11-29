@@ -8,11 +8,11 @@ void instrumentDSEInit(Module *M, Function &F, Instruction &I) {
   // fill your instrumentation code here
 }
 
-void instrumentAlloca(Module *M, AllocaInst *AI) {
+void instrumentDSEAlloca(Module *M, AllocaInst *AI) {
   // fill your instrumentation code here
 }
 
-void instrumentStore(Module *M, StoreInst *SI) {
+void instrumentDSEStore(Module *M, StoreInst *SI) {
     LLVMContext &Ctx = M->getContext();
     std::vector<Value *> Args;
     Args.push_back(SI->getPointerOperand());
@@ -29,22 +29,29 @@ void instrumentStore(Module *M, StoreInst *SI) {
     }
 }
 
-void instrumentLoad(Module *M, LoadInst *LI) {
+void instrumentDSELoad(Module *M, LoadInst *LI) {
   // fill your instrumentation code here
 }
 
-void instrumentICmp(Module *M, ICmpInst *I) {
+void instrumentDSEConst(Module *M, ICmpInst *I) {
   // fill your instrumentation code here
 }
 
-void instrumentBranch(Module *M, BranchInst *BI) {
+void instrumentDSERegister(Module *M, ICmpInst *I) {
   // fill your instrumentation code here
 }
 
-void instrumentBinOp(Module *M, BinaryOperator *BO) {
+void instrumentDSEICmp(Module *M, ICmpInst *I) {
   // fill your instrumentation code here
 }
 
+void instrumentDSEBranch(Module *M, BranchInst *BI) {
+  // fill your instrumentation code here
+}
+
+void instrumentDSEBinOp(Module *M, BinaryOperator *BO) {
+  // fill your instrumentation code here
+}
 
 /*
  * Implement your instrumentation for dynamic symbolic execution engine
