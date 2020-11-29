@@ -30,7 +30,12 @@ z3::expr eval(z3::expr &E) {
   }
 }
 
-extern "C" void __DSE_Alloca__(int R, int *Ptr) { /* Add your code here */ }
+extern "C" void __DSE_Alloca__(int R, int *Ptr) {
+  MemoryTy &Mem = SI.getMemory();
+  Address Register(R);
+  z3::expr SE = SI.getContext().int_val((uintptr_t)Ptr);
+  Mem.insert(std::make_pair(Register, SE));
+}
 
 extern "C" void __DSE_Store__(int *X) {
     MemoryTy &Mem = SI.getMemory();

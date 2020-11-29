@@ -9,7 +9,21 @@ void instrumentDSEInit(Module *M, Function &F, Instruction &I) {
 }
 
 void instrumentDSEAlloca(Module *M, AllocaInst *AI) {
-  // fill your instrumentation code here
+  LLVMContext &Ctx = M->getContext();
+  std::vector<Value *> Args;
+  Value *V = ConstantInt::get(Type::getInt32Ty(Ctx), getRegisterID(AI));
+  Args.push_back(V);
+  Args.push_back(AI);
+  Type *ArgsTypes[] = {Type::getInt32Ty(Ctx), Type::getInt32PtrTy(Ctx)};
+  FunctionType *FType = FunctionType::get(Type::getVoidTy(Ctx), ArgsTypes, false);
+  Value *Fun = M->getOrInsertFunction(DSEAllocaFunctionName, FType);
+  if (Function *F = dyn_cast<Function>(Fun)) {
+      CallInst *Call = CallInst::Create(Fun, Args, "", AI->getNextNonDebugInstruction());
+      Call->setCallingConv(CallingConv::C);
+      Call->setTailCall(true);
+  } else {
+      errs() << "WARN: invalid function\n";
+  }
 }
 
 void instrumentDSEStore(Module *M, StoreInst *SI) {
