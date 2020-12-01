@@ -47,11 +47,11 @@ void instrumentDSELoad(Module *M, LoadInst *LI) {
   // fill your instrumentation code here
 }
 
-void instrumentDSEConst(Module *M, ICmpInst *I) {
+void instrumentDSEConst(Module *M, Value *V, Instruction *I) {
   // fill your instrumentation code here
 }
 
-void instrumentDSERegister(Module *M, ICmpInst *I) {
+void instrumentDSERegister(Module *M, Value *V, Instruction *I) {
   // fill your instrumentation code here
 }
 
