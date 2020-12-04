@@ -43,12 +43,15 @@ void generateInput() {
     for (const auto &E : Vec) {
       Solver.add(E);
     }
+
     z3::check_result Result = Solver.check();
     if (Result == z3::sat) {
       storeInput();
       printNewPathCondition(Vec);
       break;
     }
+    Solver.reset();
+
   }
 }
 
