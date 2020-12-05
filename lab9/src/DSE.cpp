@@ -38,6 +38,7 @@ void generateInput() {
   z3::expr_vector Vec = Ctx.parse_file(FormulaFile);
 
   while (true) {
+    Solver.reset();
     searchStrategy(Vec);
 
     for (const auto &E : Vec) {
@@ -50,7 +51,6 @@ void generateInput() {
       printNewPathCondition(Vec);
       break;
     }
-    Solver.reset();
 
   }
 }
