@@ -19,10 +19,6 @@ add_executable(fuzzer
   src/Utils.cpp
   )
 
-add_llvm_library(InstrumentPass MODULE
-  src/Instrument.cpp
-  )
-
 add_library(runtime MODULE
   lib/runtime.c
   )
