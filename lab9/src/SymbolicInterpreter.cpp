@@ -31,6 +31,7 @@ int SymbolicInterpreter::NewInput(int *Ptr, int ID) {
 SymbolicInterpreter SI;
 
 void print(std::ostream &OS) {
+  OS << "\n===========================================\n";
   OS << "=== Inputs ===" << std::endl;
   int Idx = 0;
   for (auto &E : SI.getInputs()) {
@@ -60,7 +61,8 @@ extern "C" void __DSE_Exit__() {
   }
   std::ofstream Smt2(FormulaFile);
   Smt2 << Solver.to_smt2();
-  std::ofstream Log(LogFile);
+  std::ofstream Log; //(LogFile);
+  Log.open(LogFile, std::ofstream::out | std::ofstream::app);
   print(Log);
 }
 
