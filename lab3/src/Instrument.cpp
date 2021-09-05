@@ -4,7 +4,7 @@ using namespace llvm;
 
 namespace instrument {
 
-static const char *SanitizerFunctionName = "__sanitize__";
+static const char *SanitizeFunctionName = "__sanitize__";
 static const char *CoverageFunctionName = "__coverage__";
 
 /*
