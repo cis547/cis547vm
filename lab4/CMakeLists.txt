@@ -19,17 +19,15 @@ if (USE_REFERENCE)
   find_library(HiddenAnalysis libHiddenAnalysis.a)
 
   message(STATUS "Use reference solution")
-  add_llvm_library(DataflowPass MODULE
-    src/DataflowAnalysis.cpp
+  add_llvm_library(DivZeroPass MODULE
     src/DivZeroAnalysis.cpp
     src/Domain.cpp
   )
 
-  target_link_libraries(DataflowPass HiddenAnalysis)
+  target_link_libraries(DivZeroPass HiddenAnalysis)
 
 else (USE_REFERENCE)
-  add_llvm_library(DataflowPass MODULE
-  src/DataflowAnalysis.cpp
+  add_llvm_library(DivZeroPass MODULE
   src/DivZeroAnalysis.cpp
   src/Domain.cpp
   )

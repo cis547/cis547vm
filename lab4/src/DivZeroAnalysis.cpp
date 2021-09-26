@@ -25,6 +25,16 @@ namespace dataflow {
 
 /* Some utility functions */
 
+const char *WhiteSpaces = " \t\n\r";
+
+std::string variable(Value *V) {
+  std::string Code;
+  raw_string_ostream SS(Code);
+  V->print(SS);
+  Code.erase(0, Code.find_first_not_of(WhiteSpaces));
+  return Code;
+}
+
 bool isConstantData(Value *V) { return isa<ConstantData>(V); }
 
 bool isZero(Value *V) {
@@ -69,14 +79,16 @@ Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
   if(cv){
     // evaluate the domain for cv
     // return the domain for cv
-    
+
     // Add your code here
   }
+
   unsigned int n = PHI->getNumIncomingValues();
   Domain* joined = NULL;
+
   for(unsigned int i = 0; i < n; i++){
-    // Add your code here
     auto incoming = PHI->getIncomingValue(i);
+    // Add your code here
     Domain* V = NULL;
     // evaluate the domain of `incoming'
     // assign the pointer to the domain of `incoming' to V
@@ -121,7 +133,6 @@ bool equal(Memory *M1, Memory *M2) {
 
 /* PART 2: Flow abstract domain from all predecessors of I into the In Memory object for I.
            Uncomment and implement the flowIn function when you start with PART 2
-
     Basic Workflow:
     - For each predecessor P of instruction I, do the following:
       * Get the Out Memory OM for instruction P using OutMap
@@ -132,6 +143,7 @@ void DivZeroAnalysis::flowIn(Instruction *I, Memory *In) {
   // Add your code here
 }
 */
+
 
 
 /* PART 1: Create a transfer function that updates the Out Memory based on In Memory and the instruction type/parameters */
@@ -166,7 +178,6 @@ void DivZeroAnalysis::transfer(Instruction *I, const Memory *In, Memory *NOut) {
 
 /* PART 2: For a given instruction, merge abstract domain from pre-transfer OUT memory to post-transfer OUT memory, and update WorkSet as needed
            Uncomment and implement the flowOut function when you start with PART 2
-
     Basic Workflow:
     - If Pre and Post are unequal, then add all the successors of I in WorkSet and use the Post memory as the OUT memory for I
  */
@@ -196,13 +207,41 @@ void DivZeroAnalysis::doAnalysis(Function &F) {
 }
 */
 
-
 /* PART 1: check if a specific instruction can incur a divide-by-zero error */
 bool DivZeroAnalysis::check(Instruction *I) {
-  // Add your code here
   // Get the opcode for I
   // If it matches the opcode for Signed/Unsigned Division, check the domain
   // Return true if domain is Zero or MaybeZero
+  // Add your code here
+  return false;
+}
+
+void DivZeroAnalysis::collectErrorInsts(Function &F) {
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    if (check(&*I))
+      ErrorInsts.insert(&*I);
+  }
+}
+
+bool DivZeroAnalysis::runOnFunction(Function &F) {
+  outs() << "Running " << getAnalysisName() << " on " << F.getName() << "\n";
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    InMap[&(*I)] = new Memory;
+    OutMap[&(*I)] = new Memory;
+  }
+
+  doAnalysis(F);
+
+  collectErrorInsts(F);
+  outs() << "Potential Instructions by " << getAnalysisName() << ": \n";
+  for (auto I : ErrorInsts) {
+    outs() << *I << "\n";
+  }
+
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    delete InMap[&(*I)];
+    delete OutMap[&(*I)];
+  }
   return false;
 }
 
