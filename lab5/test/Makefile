@@ -6,7 +6,7 @@ all: simple0.out simple1.out branch0.out branch1.out branch2.out branch3.out bra
 	clang -emit-llvm -S -fno-discard-value-names -Xclang -disable-O0-optnone -c -o $@ $<
 
 %.out: %.opt.ll
-	opt -load ../build/DataflowPass.so -DivZero $< -disable-output > $@ 2> $*.err
+	opt -load ../build/DivZeroPass.so -DivZero $< -disable-output > $@ 2> $*.err
 
 clean:
 	rm -f *.ll *.out *.err

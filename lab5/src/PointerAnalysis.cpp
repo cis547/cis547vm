@@ -3,7 +3,7 @@
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
 
-#include "DataflowAnalysis.h"
+#include "DivZeroAnalysis.h"
 
 namespace dataflow {
 

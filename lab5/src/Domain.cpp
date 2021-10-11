@@ -26,10 +26,6 @@ Domain *Domain::sub(Domain *E1, Domain *E2) {
     return new Domain(Uninit);
   if (E1->Value == Zero && E2->Value == Zero)
     return new Domain(Zero);
-  if (E1->Value == Zero && E2->Value == NonZero)
-    return new Domain(NonZero);
-  if (E1->Value == NonZero && E2->Value == Zero)
-    return new Domain(NonZero);
   return new Domain(MaybeZero);
 }
 
@@ -38,8 +34,6 @@ Domain *Domain::mul(Domain *E1, Domain *E2) {
     return new Domain(Uninit);
   if (E1->Value == Zero || E2->Value == Zero)
     return new Domain(Zero);
-  if (E1->Value == NonZero && E2->Value == NonZero)
-    return new Domain(NonZero);
   return new Domain(MaybeZero);
 }
 
@@ -48,11 +42,9 @@ Domain *Domain::div(Domain *E1, Domain *E2) {
     return new Domain(Uninit);
   if (E2->Value == Zero || E2->Value == MaybeZero)
     return new Domain(Uninit);
-  if (E1->Value == NonZero)
-    return new Domain(NonZero);
   if (E1->Value == Zero)
     return new Domain(Zero);
-  return new Domain(MaybeZero);
+  return new Domain(NonZero);
 }
 
 Domain *Domain::join(Domain *E1, Domain *E2) {
@@ -83,7 +75,13 @@ Domain *Domain::join(Domain *E1, Domain *E2) {
 }
 
 bool Domain::equal(Domain E1, Domain E2) {
-  return E1.Value == E2.Value;
+  if (E1.Value == Uninit)
+    return true;
+  if (E2.Value == MaybeZero)
+    return true;
+  if (E1.Value == E2.Value)
+    return true;
+  return false;
 }
 
 void Domain::print(raw_ostream &O) {

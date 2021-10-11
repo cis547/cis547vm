@@ -21,8 +21,66 @@ namespace dataflow {
  * PART 2: Handle StoreInst and LoadInst, accounting for may-aliases when pointers are present
  */
 
+/* Some utility functions */
 
-// This function can used to evaluate Instruction::PHI */
+const char *WhiteSpaces = " \t\n\r";
+
+std::string variable(Value *V) {
+  std::string Code;
+  raw_string_ostream SS(Code);
+  V->print(SS);
+  Code.erase(0, Code.find_first_not_of(WhiteSpaces));
+  return Code;
+}
+
+std::string address(Value *V) {
+  std::string Code;
+  raw_string_ostream SS(Code);
+  V->print(SS);
+  Code.erase(0, Code.find_first_not_of(WhiteSpaces));
+  Code = "@(" + Code + ")";
+  return Code;
+}
+
+bool isConstantData(Value *V) { return isa<ConstantData>(V); }
+
+bool isZero(Value *V) {
+  if (ConstantData *CD = dyn_cast<ConstantData>(V))
+    return CD->isZeroValue();
+  else
+    return false;
+}
+
+bool contain(const std::string &Key, const Memory *Mem) {
+  if (Mem->find(Key) == Mem->end())
+    return false;
+  return true;
+}
+
+void printMem(Memory *Mem) {
+  errs() << "[\n";
+  for (Memory::iterator V = Mem->begin(), VE = Mem->end(); V != VE; ++V) {
+    errs() << "  " << V->first << " => " << *V->second << ";\n";
+  }
+  errs() << "]\n";
+}
+
+void printMap(Function &F, ValueMap<Instruction *, Memory *> &InMap,
+              ValueMap<Instruction *, Memory *> &OutMap) {
+  errs() << "Dataflow Analysis Results:\n";
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    errs() << "Instruction: " << *I << "\n";
+    errs() << "In set: \n";
+    Memory *InMem = InMap[&(*I)];
+    printMem(InMem);
+    errs() << "Out set: \n";
+    Memory *OutMem = OutMap[&(*I)];
+    printMem(OutMem);
+    errs() << "\n";
+  }
+}
+
+/* This function can used to evaluate Instruction::PHI */
 Domain *evalPhiNode(PHINode *PHI, const Memory *Mem) {
   /* Add your code from Lab 4 here */
 }
@@ -34,13 +92,13 @@ Memory* join(Memory *M1, Memory *M2) {
 }
 
 
-// Return true if the two memories M1 and M2 are strictly equal
+/* Return true if the two memories M1 and M2 are equal */
 bool equal(Memory *M1, Memory *M2) {
-  //* Add your code from Lab 4 here */
+  /* Add your code from Lab 4 here */
 }
 
 
-// Flow abstract domain from all predecessors of I into the In Memory object for I.
+/* Flow abstract domain from all predecessors of I into the In Memory object for I. */
 void DivZeroAnalysis::flowIn(Instruction *I, Memory *In) {
   /* Add your code from Lab 4 here */
 }
@@ -57,9 +115,9 @@ void DivZeroAnalysis::transfer(Instruction *I, const Memory *In, Memory *NOut,
     // If the value being stored is not an integer, then don't do anything
     if(!SI->getValueOperand()->getType()->isIntegerTy())
       return;
-    
+
     /**
-     * Otherwise:
+     * TODO
      * 1. Evaluate the domain D for SI
      * 2. Get all the pointers that "may-alias" the SI from PA and PointerSet
      * 3. Get the domain of each may-alias of SI from In, and join all those domains as well as domain D
@@ -71,7 +129,7 @@ void DivZeroAnalysis::transfer(Instruction *I, const Memory *In, Memory *NOut,
       return;
 
     /**
-     * Otherwise:
+     * TODO
      * 1. Get the pointer operand P of the load instruction (there is a specific getPointerOperand function, check the documentation for details)
      * 2. If P is in In, then update the domain of LI in NOut to the domain of P
      * 3. Otherwise, update the domain of LI in NOut to MaybeZero
@@ -83,33 +141,40 @@ void DivZeroAnalysis::transfer(Instruction *I, const Memory *In, Memory *NOut,
     // do nothing
     return;
   } else {
-    // add your code from Lab 4 here
+    /* Add your code from Lab 4 here */
   }
 }
 
-
-// For a given instruction, check if the pre-transfer memory and post-transfer memory are equal, and update WorkSet as needed
+/**
+ * For a given instruction,
+ * check if the pre-transfer memory and post-transfer memory are equal,
+ * and update WorkSet as needed.
+ **/
 void DivZeroAnalysis::flowOut(Instruction *I, Memory *Pre, Memory *Post, SetVector <Instruction *> &WorkSet) {
   /* Add your code from Lab 4 here */
 }
 
 
 void DivZeroAnalysis::doAnalysis(Function &F, PointerAnalysis *PA) {
+  // ArgMemory is the In memory for the first instruction
+  auto* ArgMemory = new Memory();
+  for(auto& Arg : F.args()) {
+    (*ArgMemory)[variable(&Arg)] = new Domain(Domain::MaybeZero);
+  }
+
+  Instruction* BeginInst = &(*inst_begin(F));
+  InMap[BeginInst] = ArgMemory;
+
   SetVector<Instruction *> WorkSet;
   SetVector<Value *> PointerSet;
   for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
     WorkSet.insert(&(*I));
     PointerSet.insert(&(*I));
   }
-
-  /* Add your code from Lab 4 here */
-  /* Basic Workflow-
-       Visit instruction in WorkSet
-       For each visited instruction I, construct its In memory by joining all memory sets of incoming flows (predecessors of I)
-       Based on the type of instruction I and the In memory, populate the NOut memory. Take the pointer analysis into consideration for this step
-       Based on the previous Out memory and the current Out memory, check if there is a difference between the two and
-         flow the memory set appropriately to all successors of I and update WorkSet accordingly
-  */ 
+  /**
+   * Add your code from Lab 4 here.
+   * You will have to modify it a bit to use the PointerAnalysis
+   */
 }
 
 
@@ -119,9 +184,37 @@ bool DivZeroAnalysis::check(Instruction *I) {
   return false;
 }
 
+void DivZeroAnalysis::collectErrorInsts(Function &F) {
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    if (check(&*I))
+      ErrorInsts.insert(&*I);
+  }
+}
+
+bool DivZeroAnalysis::runOnFunction(Function &F) {
+  outs() << "Running " << getAnalysisName() << " on " << F.getName() << "\n";
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    InMap[&(*I)] = new Memory;
+    OutMap[&(*I)] = new Memory;
+  }
+
+  PointerAnalysis *PA = new PointerAnalysis(F);
+  doAnalysis(F, PA);
+
+  collectErrorInsts(F);
+  outs() << "Potential Instructions by " << getAnalysisName() << ": \n";
+  for (auto I : ErrorInsts) {
+    outs() << *I << "\n";
+  }
+
+  for (inst_iterator I = inst_begin(F), E = inst_end(F); I != E; ++I) {
+    delete InMap[&(*I)];
+    delete OutMap[&(*I)];
+  }
+  return false;
+}
 
 char DivZeroAnalysis::ID = 1;
 static RegisterPass<DivZeroAnalysis> X("DivZero", "Divide-by-zero Analysis",
                                        false, false);
 } // namespace dataflow
-
