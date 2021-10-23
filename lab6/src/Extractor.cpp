@@ -75,4 +75,42 @@ void Extractor::addNext(const InstMapTy &InstMap, Instruction *X,
  */
 void Extractor::extractConstraints(const InstMapTy &InstMap, Instruction *I) {
   /* Add your code here */
+  
+  /**
+   * TODO:
+   *   - For each predecessor P of instruction I, add a new fact in the `next` relation
+   * 
+   *   - For each of the instruction types below, except `AllocaInst`, add appropriate facts in the `def` and `use` relations:
+   *     + The fact in the `def` relation must include the Value being defined and the Instruction defining that Value
+   *     + The fact in the `use` relation must include any Value being used (eg operands in `BinaryOperator` instructions) and the Instruction using that Value
+   * 
+   *   - For `BinaryOperator` instructions, additionally add a fact for the `div` relation if the operator is a division
+   * 
+   *   - For `CallInst` instructions:
+   *     + Add the fact to the `def` relation only if it has a non-void return type
+   *     + If the instruction is a call to the tainted input, add the appropriate fact to the `taint` relation (check this using the `isTaintedInput()` function)
+   *     + If the instruction is a call to the sanitize function, add the appropriate fact to the `sanitizer` relation (check this using the `isSanitizer()` function)
+   */
+
+  if (AllocaInst *AI = dyn_cast<AllocaInst>(I)) {
+    // do nothing
+  } else if (StoreInst *SI = dyn_cast<StoreInst>(I)) {
+    // your code goes here
+
+  } else if (LoadInst *LI = dyn_cast<LoadInst>(I)) {
+    // your code goes here
+    
+  } else if (BinaryOperator *BI = dyn_cast<BinaryOperator>(I)) {
+    // your code goes here
+    
+  } else if (CallInst *CI = dyn_cast<CallInst>(I)) {
+    // your code goes here
+    
+  } else if (CastInst *CI = dyn_cast<CastInst>(I)) {
+    // your code goes here
+    
+  } else if (CmpInst *CI = dyn_cast<CmpInst>(I)) {
+    // your code goes here
+    
+  }
 }
