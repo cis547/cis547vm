@@ -1,1 +1,0 @@
-../../lab3/src/Instrument.cpp
