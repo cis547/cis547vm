@@ -1,0 +1,6 @@
+*.cov
+*.bincov
+*.binops
+build/
+test/*.ll
+submission.zip

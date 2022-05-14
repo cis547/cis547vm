@@ -2,7 +2,6 @@
 build
 
 # bitcode and analysis output
-*.ll
 *.out
 *.err
 *.cov
