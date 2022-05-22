@@ -1,0 +1,12 @@
+*.cov
+build/
+test/*.ll
+submission.zip
+
+# Test results
+test/fuzz_output_*
+test/output_*.txt
+test/errors_*.txt
+
+# Core dumps
+core.*
