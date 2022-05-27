@@ -15,10 +15,5 @@ OUT_DIR="./fuzz_output_$1"
 rm -rf "$OUT_DIR" "out_$1.txt"
 mkdir -p "$OUT_DIR"
 
-TMP_OUT_DIR="/tmp/fuzz_output_$1"
-rm -rf "$TMP_OUT_DIR" "out_$1.txt"
-mkdir -p "$TMP_OUT_DIR"
 
-timeout "$TIME" ../build/fuzzer "$TARGET" "$FUZZ_SEED" "$TMP_OUT_DIR" "$FREQ" "$SEED" > "out_$1.txt" || :
-
-mv "$TMP_OUT_DIR" "$OUT_DIR"
+timeout "$TIME" ../build/fuzzer "$TARGET" "$FUZZ_SEED" "$OUT_DIR" "$FREQ" "$SEED" > "out_$1.txt" || :
