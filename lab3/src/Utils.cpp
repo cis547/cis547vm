@@ -39,7 +39,7 @@ int readSeedInputs(std::vector<std::string> &SeedInputs,
 
 void readCoverageFile(std::string &Target,
                       std::vector<std::string> &CoverageData) {
-  std::string CoveragePath = Target + ".cov";
+  std::string CoveragePath = "/tmp/" + Target + ".cov";
   std::ifstream InFile(CoveragePath);
   std::string Line;
   while (std::getline(InFile, Line)) {
