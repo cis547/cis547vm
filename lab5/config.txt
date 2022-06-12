@@ -1,0 +1,4 @@
+# Only for use with test.sh
+
+freq: 10
+seed: 42
