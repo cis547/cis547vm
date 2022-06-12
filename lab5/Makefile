@@ -1,6 +1,6 @@
 MAKEFLAGS += --no-builtin-rules
 
-SRC:=$(shell find . -name '*.py') requirements.txt Makefile CMakeLists.txt $(shell find . -name '*.cpp') $(shell find . -name '*.c') $(shell find . -name '*.h')
+SRC:=$(shell find . -name '*.py') requirements.txt Makefile CMakeLists.txt $(shell find ./src -name '*.cpp') $(shell find ./lib -name '*.c') $(shell find ./include -name '*.h')
 
 all: install
 
