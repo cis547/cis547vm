@@ -77,12 +77,12 @@ def get_log_data_for_dir(
                 return_code == expected_return_code
             ), f"return_code didn't match expected value: {expected_return_code}"
 
-        # Move the log file to appropriate location.
-        log_save_location = file.with_suffix(CBI_EXTENSION)
-        log_file.rename(log_save_location)
-        if not log_save_location.exists():
+        if not log_file.exists():
             log_data.append([])
         else:
+            # Move the log file to appropriate location.
+            log_save_location = file.with_suffix(CBI_EXTENSION)
+            log_file.rename(log_save_location)
             with log_save_location.open("r") as fp:
                 # Parse all lines in the log file and add them to the log_data
                 log_data.append(
