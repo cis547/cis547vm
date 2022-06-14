@@ -80,11 +80,14 @@ def get_log_data_for_dir(
         # Move the log file to appropriate location.
         log_save_location = file.with_suffix(CBI_EXTENSION)
         log_file.rename(log_save_location)
-        with log_save_location.open("r") as fp:
-            # Parse all lines in the log file and add them to the log_data
-            log_data.append(
-                [CBILogEntry(**json.loads(log_entry)) for log_entry in fp.readlines()]
-            )
+        if not log_save_location.exists():
+            log_data.append([])
+        else:
+            with log_save_location.open("r") as fp:
+                # Parse all lines in the log file and add them to the log_data
+                log_data.append(
+                    [CBILogEntry(**json.loads(log_entry)) for log_entry in fp.readlines()]
+                )
     return log_data
 
 
