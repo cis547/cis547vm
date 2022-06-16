@@ -4,13 +4,13 @@ SRC:=$(shell find . -name '*.py') requirements.txt Makefile CMakeLists.txt $(she
 
 all: install
 
-build: ${SRC}
+build:
 	@echo "Building Instrumentation..."
 	@(mkdir -p ./build; cd ./build; cmake .. && make)
-	@echo "Building CBI..."
-	@python3 -m pip install --upgrade --editable . 1> /dev/null 2>&1
 
 install: build
+	@echo "Building CBI..."
+	@python3 -m pip install --upgrade --editable . 1> /dev/null 2>&1
 	@echo "CBI installed."
 
 submit: clean
