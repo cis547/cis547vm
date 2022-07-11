@@ -1,0 +1,13 @@
+*.cov
+build/
+test/*.ll
+submission.zip
+
+# Test results
+test/*/input
+test/*/output
+test/*/err
+test/*/out
+
+# Core dumps
+core.*

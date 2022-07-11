@@ -1,0 +1,46 @@
+.decl def(var: symbol, inst: symbol)
+.decl use(var: symbol, inst: symbol)
+
+.input def
+.output def
+.input use
+.output use
+
+
+.decl kill(curr_inst: symbol, old_inst: symbol)
+.decl next(curr_inst: symbol, next_inst: symbol)
+.decl in(inst: symbol, def_inst: symbol)
+.decl out(inst: symbol, def_inst: symbol)
+
+.output kill
+.input next
+.output next
+.output in
+.output out
+
+
+.decl taint(inst: symbol)
+.decl edge(from: symbol, to: symbol)
+.decl path(from: symbol, to: symbol)
+.decl sanitizer(inst: symbol)
+.decl div(denom: symbol, inst: symbol)
+.decl alarm(inst: symbol)
+
+.input taint
+.output taint
+.output edge
+.output path
+.input sanitizer
+.output sanitizer
+.input div
+.output div
+.output alarm
+
+/* Reaching definition Analysis */
+kill(curr_inst, old_inst) :- def(var, curr_inst), def(var, old_inst).
+out(inst, inst) :- def(_, inst).
+out(inst, def_inst) :- in(inst, def_inst), !kill(inst, def_inst).
+in(inst, def_inst) :- out(prev_inst, def_inst), next(prev_inst, inst).
+
+/* Rules for taint Analysis */
+/* TODO: Add the rules for taint analysis */
