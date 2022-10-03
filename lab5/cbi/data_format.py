@@ -45,14 +45,14 @@ class ObservationStatus(Enum):
     Enum for the Observation Status of a predicate.
 
     :param NEVER: The predicate was never observed.
-    :param TRUE: The predicate was observed and was always true.
-    :param FALSE: The predicate was observed and was always false.
+    :param ONLY_TRUE: The predicate was observed and was always true.
+    :param ONLY_FALSE: The predicate was observed and was always false.
     :param BOTH: The predicate was observed at least once as true and false.
     """
 
     NEVER = "never"
-    TRUE = "true"
-    FALSE = "false"
+    ONLY_TRUE = "true"
+    ONLY_FALSE = "false"
     BOTH = "both"
 
     @classmethod
@@ -60,7 +60,7 @@ class ObservationStatus(Enum):
         """
         Convinence method to create an Observation status enum from a boolean.
         """
-        return cls.TRUE if observed_as else cls.FALSE
+        return cls.ONLY_TRUE if observed_as else cls.ONLY_FALSE
 
     @staticmethod
     def merge(observation1, observation2) -> "ObservationStatus":

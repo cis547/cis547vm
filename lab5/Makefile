@@ -1,15 +1,17 @@
 MAKEFLAGS += --no-builtin-rules
 
-SRC:=$(shell find . -name '*.py') requirements.txt Makefile CMakeLists.txt $(shell find ./src -name '*.cpp') $(shell find ./lib -name '*.c') $(shell find ./include -name '*.h')
+PY_SRC:=$(shell find . -name '*.py') requirements.txt
+C_SRC=$(shell find src -name '*.cpp') $(shell find . -name '*.h') $(shell find ./lib -name '*.c')
+SRC=${PY_SRC} ${C_SRC} Makefile CMakeLists.txt
 
 all: install
 
-build:
+build: ${C_SRC}
 	@echo "Building Instrumentation..."
 	@(mkdir -p ./build; cd ./build; cmake .. && make)
 
-install: build
-	@echo "Building CBI..."
+install: build ${PY_SRC}
+	@echo "Installing CBI..."
 	@python3 -m pip install --upgrade --editable . 1> /dev/null 2>&1
 	@echo "CBI installed."
 
@@ -25,7 +27,7 @@ submit: clean
 clean-instrumentation:
 	@echo "Cleaning instrumentation..."
 	@mkdir -p ./build
-	rm -rf ./build/*
+	rm -rf ./build
 
 clean-package:
 	@echo "Cleaning cbi..."
@@ -37,6 +39,6 @@ clean-test:
 	@echo "Cleaning up test..."
 	@(cd test; make clean)
 
-clean: clean-package clean-test clean-instrumentation
+clean: clean-package clean-instrumentation
 	@echo "Removing submission.zip"
 	rm -f ./submission.zip
