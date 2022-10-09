@@ -72,7 +72,7 @@ bool CBIInstrument::runOnFunction(Function &F) {
 }
 
 /**
- * Implement instrumentation for the branch scheme of CBI. (Lab 9)
+ * Implement instrumentation for the branch scheme of CBI.
  */
 void instrumentBranch(Module *M, BranchInst *Branch, int Line, int Col) {
   auto &Context = M->getContext();
@@ -84,7 +84,7 @@ void instrumentBranch(Module *M, BranchInst *Branch, int Line, int Col) {
 }
 
 /**
- * Implement instrumentation for the return scheme of CBI. (Lab 9)
+ * Implement instrumentation for the return scheme of CBI.
  */
 void instrumentReturn(Module *M, CallInst *Call, int Line, int Col) {
   auto &Context = M->getContext();
