@@ -8,7 +8,7 @@ Part A: Follow the below instructions to fill in the table below.
 Each of the C programs contains zero or more division instructions.
 
 First, inspect the code of each program, and fill in its ground truth
-(right/wrong) in the Ground Truth column: 
+(right/wrong) in the Ground Truth column:
 
 - right if the program does not contain any divide-by-zero errors.
 - wrong if the program contains a divide-by-zero error.

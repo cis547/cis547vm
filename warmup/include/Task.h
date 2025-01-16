@@ -33,7 +33,7 @@ public:
 class Misc : public Task {
 public:
     Misc(std::string taskdesc, int tid) : Task(taskdesc, tid) {}
-    
+
     std::string getDescription();
 };
 
