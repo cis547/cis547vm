@@ -64,4 +64,4 @@ attributes #1 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-
 !llvm.ident = !{!1}
 
 !0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{!"clang version 8.0.1- (branches/release_80)"}
+!1 = !{!"clang version 8.0.1-9 (tags/RELEASE_801/final)"}
