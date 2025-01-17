@@ -8,7 +8,7 @@ results/afl_logs/%/out.txt: c_programs/%.c
 	@mkdir -p afl_output/
 	AFL_DONT_OPTIMIZE=1 afl-gcc $< $ -o $* 2> /dev/null
 	@mkdir -p results/afl_logs/$*
-	-timeout 30s afl-fuzz -i afl_input -o afl_output ./$*  > $@ 2> /dev/null
+	-timeout 30s afl-fuzz -i afl_input -o afl_output -m none ./$*  > $@ 2> /dev/null
 	@cp -r afl_output/ $* results/afl_logs/$*/ && rm -rf afl_output/* $*
 
 results/ikos_logs/%_int_out.txt: c_programs/%.c
