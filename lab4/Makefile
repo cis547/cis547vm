@@ -5,8 +5,8 @@ SRC:=$(shell find . -name '*.py') requirements.txt Makefile
 all: install
 
 build: clean-package ${SRC}
-	@echo "Building Deta-Debugger..."
-	@python3 -m pip install --upgrade --editable . 1> /dev/null 2>&1
+	@echo "Building Delta-Debugger..."
+	@python3 -m pip install --use-pep517 --upgrade --editable . 1> /dev/null 2>&1
 
 install: build
 	@echo "Deta-Debugger installed."
@@ -22,7 +22,7 @@ submit:
 
 clean-package:
 	@echo "Cleaning delta-debugger..."
-	@python3 -m pip uninstall deta-debugger 2> /dev/null
+	@python3 -m pip uninstall --yes delta-debugger 2> /dev/null
 	@rm -f /usr/local/bin/delta-debugger
 	@rm -rf */__pycache__ *.egg-info
 
