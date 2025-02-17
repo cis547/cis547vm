@@ -12,7 +12,7 @@ build: ${C_SRC}
 
 install: build ${PY_SRC}
 	@echo "Installing CBI..."
-	@python3 -m pip install --upgrade --editable . 1> /dev/null 2>&1
+	@python3 -m pip install --use-pep517 --upgrade --editable . 1> /dev/null 2>&1
 	@echo "CBI installed."
 
 submit: clean
@@ -31,7 +31,7 @@ clean-instrumentation:
 
 clean-package:
 	@echo "Cleaning cbi..."
-	@python3 -m pip uninstall cbi 2> /dev/null
+	@python3 -m pip uninstall --yes cbi 2> /dev/null
 	@rm -f /usr/local/bin/cbi
 	@rm -rf */__pycache__ *.egg-info
 
