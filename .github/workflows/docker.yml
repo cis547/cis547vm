@@ -1,0 +1,75 @@
+name: Docker
+
+on:
+    pull_request:
+        paths:
+            - "Dockerfile"
+    # Run this action every day
+    schedule:
+        - cron: "30 18 * * *"
+    # Allow manual triggers
+    workflow_dispatch:
+
+env:
+    IMAGE_ID: ghcr.io/cis547/cis547vm
+
+jobs:
+    build-and-release:
+        name: Docker -- Build and Release
+
+        strategy:
+            matrix:
+                runner: [24.04, 24.04-arm]
+
+        runs-on: ubuntu-${{ matrix.runner }}
+
+        permissions:
+            packages: write
+            contents: read
+            attestations: write
+            id-token: write
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build ${{ matrix.runner }} image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: ${{ github.event_name != 'pull_request' }}
+                  tags: ${{ env.IMAGE_ID }}:release-${{ matrix.runner }}
+                  file: Dockerfile
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    combine-multiplatform:
+        name: Docker -- Combine Multiplatform
+
+        if: ${{ github.event_name != 'pull_request' }}
+
+        runs-on: ubuntu-latest
+        needs: [build-and-release]
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Create manifest and push
+              run: |
+                  docker manifest create \
+                    ${{ env.IMAGE_ID }}:release \
+                    --amend ${{ env.IMAGE_ID }}:release-24.04 \
+                    --amend ${{ env.IMAGE_ID }}:release-24.04-arm
+                  docker manifest push ${{ env.IMAGE_ID }}:release
