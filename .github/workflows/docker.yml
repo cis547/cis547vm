@@ -4,9 +4,13 @@ on:
     pull_request:
         paths:
             - "Dockerfile"
-    # Run this action every day
-    schedule:
-        - cron: "30 18 * * *"
+
+    push:
+        branches:
+            - master
+        paths:
+            - "Dockerfile"
+
     # Allow manual triggers
     workflow_dispatch:
 
