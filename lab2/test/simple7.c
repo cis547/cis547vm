@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 
 void f() {
   int x = 0, y, z;

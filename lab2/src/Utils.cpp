@@ -1,6 +1,7 @@
 #include "Utils.h"
 
 #include "llvm/IR/Instruction.h"
+#include "llvm/Support/raw_ostream.h"
 
 using namespace llvm;
 
@@ -8,42 +9,42 @@ const char *WHITESPACES = " \t\n\r";
 
 char getBinOpSymbol(Instruction::BinaryOps Opcode) {
   switch (Opcode) {
-  case Instruction::Add:
-  case Instruction::FAdd:
-    return '+';
-  case Instruction::Sub:
-  case Instruction::FSub:
-    return '-';
-  case Instruction::Mul:
-  case Instruction::FMul:
-    return '*';
-  case Instruction::UDiv:
-  case Instruction::SDiv:
-  case Instruction::FDiv:
-    return '/';
-  case Instruction::URem:
-  case Instruction::SRem:
-  case Instruction::FRem:
-    return '%';
-  default:
-    return '?';
+    case Instruction::Add:
+    case Instruction::FAdd:
+      return '+';
+    case Instruction::Sub:
+    case Instruction::FSub:
+      return '-';
+    case Instruction::Mul:
+    case Instruction::FMul:
+      return '*';
+    case Instruction::UDiv:
+    case Instruction::SDiv:
+    case Instruction::FDiv:
+      return '/';
+    case Instruction::URem:
+    case Instruction::SRem:
+    case Instruction::FRem:
+      return '%';
+    default:
+      return '?';
   }
 }
 
 const std::string getBinOpName(const char symbol) {
   switch (symbol) {
-  case '+':
-    return "Addition";
-  case '-':
-    return "Subtraction";
-  case '*':
-    return "Multiplication";
-  case '/':
-    return "Division";
-  case '%':
-    return "Modulo";
-  default:
-    return "Unknown operation";
+    case '+':
+      return "Addition";
+    case '-':
+      return "Subtraction";
+    case '*':
+      return "Multiplication";
+    case '/':
+      return "Division";
+    case '%':
+      return "Modulo";
+    default:
+      return "Unknown operation";
   }
 }
 

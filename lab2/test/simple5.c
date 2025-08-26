@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main(){
+int main() {
   int y = 1, z = 1;
   int un;
   scanf("%d", &un);

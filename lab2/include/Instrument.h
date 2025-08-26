@@ -3,17 +3,21 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Module.h"
-#include "llvm/Pass.h"
+#include "llvm/IR/PassManager.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/PassPlugin.h"
+#include "llvm/Support/raw_ostream.h"
 
 using namespace llvm;
 
 namespace instrument {
 
-struct Instrument : public FunctionPass {
-  static char ID;
-
-  Instrument() : FunctionPass(ID) {}
-
-  bool runOnFunction(Function &F) override;
+struct StaticAnalysisPass : public PassInfoMixin<StaticAnalysisPass> {
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
-} // namespace instrument
+
+struct DynamicAnalysisPass : public PassInfoMixin<DynamicAnalysisPass> {
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+};
+
+}  // namespace instrument
