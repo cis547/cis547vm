@@ -1,0 +1,30 @@
+# Check style of codebase
+name: Style
+
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+
+jobs:
+    clang-format:
+        name: ClangFormat
+
+        runs-on: ubuntu-22.04
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install ClangFormat
+              run: |
+                  wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+                  sudo add-apt-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main"
+                  sudo add-apt-repository "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-19 main"
+                  sudo apt-get update
+                  sudo apt-get install clang-format-19
+
+            - name: Check LibCN code formatting
+              run: |
+                  find lab1/ -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format-19 --dry-run -Werror
