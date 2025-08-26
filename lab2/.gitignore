@@ -4,3 +4,4 @@
 build/
 test/*.ll
 submission.zip
+!lib/

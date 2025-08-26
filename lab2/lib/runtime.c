@@ -1,24 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 
 const int STR_MAX_SIZE = 1024;
 
 const char *getBinOpName(char symbol) {
   switch (symbol) {
-  case '+':
-    return "Addition";
-  case '-':
-    return "Subtraction";
-  case '*':
-    return "Multiplication";
-  case '/':
-    return "Division";
-  case '%':
-    return "Modulo";
-  default:
-    return "Unknown operation";
+    case '+':
+      return "Addition";
+    case '-':
+      return "Subtraction";
+    case '*':
+      return "Multiplication";
+    case '/':
+      return "Division";
+    case '%':
+      return "Modulo";
+    default:
+      return "Unknown operation";
   }
 }
 
@@ -35,7 +35,7 @@ void get_logfile(char *buf, const int buf_size, const char *ext) {
   strncpy(buf, exe, len);
   buf[len] = 0;
   for (int i = 0; i <= strlen(ext); ++i) {
-    buf[buf_size-(i+1)] = 0;
+    buf[buf_size - (i + 1)] = 0;
   }
   strncat(buf, ext, strlen(ext));
 }
@@ -52,14 +52,12 @@ void __binop_op__(char c, int line, int col, int op1, int op2) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".binops");
   FILE *f = fopen(logfile, "a");
-  fprintf(
-    f,
-    "%s on Line %d, Column %d with first operand=%d and second operand=%d\n",
-    getBinOpName(c),
-    line,
-    col,
-    op1,
-    op2
-  );
+  fprintf(f,
+      "%s on Line %d, Column %d with first operand=%d and second operand=%d\n",
+      getBinOpName(c),
+      line,
+      col,
+      op1,
+      op2);
   fclose(f);
 }

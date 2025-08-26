@@ -26,4 +26,4 @@ const std::string getBinOpName(const char symbol);
  */
 std::string variable(Value *V);
 
-#endif // UTILS_H
+#endif  // UTILS_H
