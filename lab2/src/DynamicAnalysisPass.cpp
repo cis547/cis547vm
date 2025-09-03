@@ -13,7 +13,7 @@ void instrumentCoverage(Module *M, Instruction &I, int Line, int Col);
 void instrumentBinOpOperands(Module *M, BinaryOperator *BinOp, int Line, int Col);
 
 PreservedAnalyses DynamicAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) {
-  errs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
+  outs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
 
   LLVMContext &Context = M.getContext();
   Type *VoidType = Type::getVoidTy(Context);
@@ -35,9 +35,9 @@ PreservedAnalyses DynamicAnalysisPass::run(Module &M, ModuleAnalysisManager &AM)
       continue;
 
     auto FunctionName = F.getName().str();
-    errs() << "Instrumenting function " << FunctionName << "\n";
+    outs() << "Instrumenting function " << FunctionName << "\n";
 
-    errs() << "Instrument Instructions\n";
+    outs() << "Instrument Instructions\n";
 
     // Store instructions to instrument to avoid iterator invalidation
     std::vector<std::pair<Instruction *, std::pair<int, int>>> toInstrument;

@@ -9,16 +9,16 @@ namespace instrument {
 const auto PASS_DESC = "Static Analysis Pass";
 
 PreservedAnalyses StaticAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) {
-  errs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
+  outs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
 
   for (auto &F : M) {
     if (F.isDeclaration())
       continue;
 
     auto FunctionName = F.getName().str();
-    errs() << "Running " << PASS_DESC << " on function " << FunctionName << "\n";
+    outs() << "Running " << PASS_DESC << " on function " << FunctionName << "\n";
 
-    errs() << "Locating Instructions\n";
+    outs() << "Locating Instructions\n";
     for (inst_iterator Iter = inst_begin(F), E = inst_end(F); Iter != E; ++Iter) {
       Instruction &Inst = (*Iter);
       llvm::DebugLoc DebugLoc = Inst.getDebugLoc();
@@ -29,7 +29,7 @@ PreservedAnalyses StaticAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) 
 
       int Line = DebugLoc.getLine();
       int Col = DebugLoc.getCol();
-      errs() << Line << ", " << Col << "\n";
+      outs() << Line << ", " << Col << "\n";
 
       /**
        * TODO: Add code to check if the instruction is a BinaryOperator and if
