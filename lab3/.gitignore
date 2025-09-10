@@ -7,6 +7,9 @@ submission.zip
 test/fuzz_output_*
 test/output_*.txt
 test/errors_*.txt
+test/fuzzing_dict*
 
 # Core dumps
 core.*
+
+!lib/

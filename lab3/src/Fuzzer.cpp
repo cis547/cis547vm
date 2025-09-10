@@ -6,33 +6,33 @@
  * implementation, you don't have to modify it.
  */
 
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <stdio.h>
+#include "Utils.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <limits.h>
+#include <stdio.h>
+#include <string>
 #include <time.h>
 #include <unistd.h>
 
-#include <cstdio>
-#include <cstring>
-#include <string>
-
-#include "Utils.h"
-
-#define ARG_EXIST_CHECK(Name, Arg)                                             \
-  {                                                                            \
-    struct stat Buffer;                                                        \
-    if (stat(Arg, &Buffer)) {                                                  \
-      fprintf(stderr, "%s not found\n", Arg);                                  \
-      return 1;                                                                \
-    }                                                                          \
-  }                                                                            \
+#define ARG_EXIST_CHECK(Name, Arg)                                                       \
+  {                                                                                      \
+    struct stat Buffer;                                                                  \
+    if (stat(Arg, &Buffer)) {                                                            \
+      fprintf(stderr, "%s not found\n", Arg);                                            \
+      return 1;                                                                          \
+    }                                                                                    \
+  }                                                                                      \
   std::string Name(Arg);
 
-#define DBG                                                                    \
-  std::cout << "Hit F::" << __FILE__ << " ::L" << __LINE__ << std::endl
+#define DBG std::cout << "Hit F::" << __FILE__ << " ::L" << __LINE__ << std::endl
 
 /**
  * @brief Type Signature of Mutation Function.
@@ -102,6 +102,7 @@ int StrategyState = 0;
  */
 std::string selectInput(RunInfo Info) {
   int Index = 0;
+
   return SeedInputs[Index];
 }
 
@@ -123,7 +124,9 @@ const int LENGTH_ALPHA = sizeof(ALPHA);
  * @param Original Original input string.
  * @return std::string mutated string.
  */
-std::string mutationA(std::string Original) { return Original; }
+std::string mutationA(std::string Original) {
+  return Original;
+}
 
 /**
  * @brief Mutation Strategy that inserts a random
@@ -133,8 +136,9 @@ std::string mutationA(std::string Original) { return Original; }
  * @return std::string mutated string.
  */
 std::string mutationB(std::string Original) {
-  if (Original.length() <= 0)
+  if (Original.length() <= 0) {
     return Original;
+  }
 
   int Index = rand() % Original.length();
   return Original.insert(Index, 1, ALPHA[rand() % LENGTH_ALPHA]);
@@ -149,6 +153,21 @@ std::string mutationB(std::string Original) {
  * Get creative with your strategies.
  */
 
+std::set<std::pair<std::string, int>> FuzzingDict;
+
+std::string mutationDictDeterministic(std::string Original) {
+  // TODO: Insert/overwrite entries at multiple indices
+
+  return Original;
+}
+
+std::string mutationDictRandom(std::string Original) {
+  // TODO: Implement a mutation that randomly:
+  // - inserts a dictionary entry into `Original`, or
+  // - overwrites some of `Original` with a dictionary entry
+  return Original;
+}
+
 /**
  * @brief Vector containing all the available mutation functions
  *
@@ -156,7 +175,10 @@ std::string mutationB(std::string Original) {
  * For example if you implement mutationC then update it to be:
  * std::vector<MutationFn *> MutationFns = {mutationA, mutationB, mutationC};
  */
-std::vector<MutationFn *> MutationFns = {mutationA, mutationB};
+std::vector<MutationFn *> MutationFns = {
+    mutationA,
+    mutationB,
+};
 
 /**
  * @brief Select a mutation function to apply to the seed input.
@@ -204,8 +226,7 @@ void feedBack(std::string &Target, RunInfo &Info) {
    * CoverageState to make it available in the next call to feedback.
    */
   CoverageState.assign(RawCoverageData.begin(),
-                       RawCoverageData.end()); // No extra processing
-
+      RawCoverageData.end());  // No extra processing
 }
 
 int Freq = 1000;
@@ -223,8 +244,7 @@ bool test(std::string &Target, std::string &Input, std::string &OutDir) {
     fprintf(stderr, "%s not found\n", Target.c_str());
     exit(1);
   }
-  fprintf(stderr, "\e[A\rTried %d inputs, %d crashes found\n", Count,
-          failureCount);
+  fprintf(stderr, "\e[A\rTried %d inputs, %d crashes found\n", Count, failureCount);
   if (ReturnCode == 0) {
     if (PassCount++ % Freq == 0)
       storePassingInput(Input, OutDir);
@@ -260,9 +280,10 @@ void fuzz(std::string Target, std::string OutDir) {
  */
 int main(int argc, char **argv) {
   if (argc < 4) {
-    printf("usage %s [target] [seed input dir] [output dir] [frequency "
-           "(optional)] [seed (optional arg)]\n",
-           argv[0]);
+    printf(
+        "usage %s [target] [seed input dir] [output dir] [frequency "
+        "(optional)] [seed (optional arg)]\n",
+        argv[0]);
     return 1;
   }
 
@@ -270,10 +291,29 @@ int main(int argc, char **argv) {
   ARG_EXIST_CHECK(SeedInputDir, argv[2]);
   ARG_EXIST_CHECK(OutDir, argv[3]);
 
-  if (argc >= 5)
-    Freq = strtol(argv[4], NULL, 10);
+  int RandomSeed = (int)time(NULL);
+  for (int i = 4; i < argc; i++) {
+    std::string arg = argv[i];
 
-  int RandomSeed = argc > 5 ? strtol(argv[5], NULL, 10) : (int)time(NULL);
+    if (arg == "--freq") {
+      Freq = strtol(argv[i + 1], NULL, 10);
+      i++;
+    } else if (arg == "--seed") {
+      RandomSeed = strtol(argv[i + 1], NULL, 10);
+      i++;
+    } else if (arg == "--dict") {
+      FuzzingDict = readDictionary(argv[i + 1]);
+      i++;
+
+      if (!FuzzingDict.empty()) {
+        // TODO: Uncomment as you implement each mutation
+        // MutationFns.push_back(mutationDictDeterministic);
+        // MutationFns.push_back(mutationDictRandom);
+      }
+    }
+  }
+
+  fprintf(stderr, "Using seed: %d\n", RandomSeed);
 
   srand(RandomSeed);
   storeSeed(OutDir, RandomSeed);
@@ -283,6 +323,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Cannot read seed input directory\n");
     return 1;
   }
+
   fprintf(stderr, "Fuzzing %s...\n\n", Target.c_str());
   fuzz(Target, OutDir);
   return 0;

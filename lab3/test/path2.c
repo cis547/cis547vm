@@ -27,8 +27,7 @@ int main() {
                                     if (strlen(input) > 220) {
                                       if (strlen(input) > 230) {
                                         if (strlen(input) > 240) {
-                                          if (input[25] == 'a' ||
-                                              input[25] == 'b' ||
+                                          if (input[25] == 'a' || input[25] == 'b' ||
                                               input[25] == 'c') {
                                             z = y / x;
                                           }
