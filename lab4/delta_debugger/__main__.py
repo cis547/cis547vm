@@ -53,4 +53,4 @@ if __name__ == "__main__":
     """
     usage: delta-debug [target] [crashing input file]
     """
-    sys.exit(main(*sys.argv[1:]))
+    sys.exit(main())
