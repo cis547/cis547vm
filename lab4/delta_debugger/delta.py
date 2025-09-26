@@ -7,6 +7,8 @@ from delta_debugger import run_target
 EMPTY_STRING = b""
 
 
+
+
 def delta_debug(target: str, input: bytes) -> bytes:
     """
     Delta-Debugging algorithm
