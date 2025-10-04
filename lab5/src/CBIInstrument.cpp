@@ -1,5 +1,7 @@
 #include "CBIInstrument.h"
 
+#include <llvm/Passes/PassPlugin.h>
+
 using namespace llvm;
 
 namespace instrument {
@@ -29,35 +31,41 @@ void instrumentBranch(Module *M, BranchInst *Branch, int Line, int Col);
  */
 void instrumentReturn(Module *M, CallInst *Call, int Line, int Col);
 
-bool CBIInstrument::runOnFunction(Function &F) {
-  auto FunctionName = F.getName().str();
-  outs() << "Running " << PASS_DESC << " on function " << FunctionName << "\n";
+PreservedAnalyses CBIInstrument::run(Module &M, ModuleAnalysisManager &AM) {
+  outs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
 
-  LLVMContext &Context = F.getContext();
-  Module *M = F.getParent();
+  auto &Context = M.getContext();
+  auto *VoidType = Type::getVoidTy(Context);
+  auto *Int32Type = Type::getInt32Ty(Context);
+  auto *BoolType = Type::getInt1Ty(Context);
 
-  Type *VoidType = Type::getVoidTy(Context);
-  Type *Int32Type = Type::getInt32Ty(Context);
-  Type *BoolType = Type::getInt1Ty(Context);
+  // Declare external functions
+  M.getOrInsertFunction(
+      CBI_BRANCH_FUNCTION_NAME, VoidType, Int32Type, Int32Type, BoolType);
 
-  M->getOrInsertFunction(CBI_BRANCH_FUNCTION_NAME, VoidType, Int32Type,
-                         Int32Type, BoolType);
+  M.getOrInsertFunction(
+      CBI_RETURN_FUNCTION_NAME, VoidType, Int32Type, Int32Type, Int32Type);
 
-  M->getOrInsertFunction(CBI_RETURN_FUNCTION_NAME, VoidType, Int32Type,
-                         Int32Type, Int32Type);
-
-  for (inst_iterator Iter = inst_begin(F), E = inst_end(F); Iter != E; ++Iter) {
-    Instruction &Inst = (*Iter);
-    llvm::DebugLoc DebugLoc = Inst.getDebugLoc();
-    if (!DebugLoc) {
-      // Skip Instruction if it doesn't have debug information.
+  for (auto &F : M) {
+    if (F.isDeclaration()) {
       continue;
     }
 
-    int Line = DebugLoc.getLine();
-    int Col = DebugLoc.getCol();
+    auto FunctionName = F.getName().str();
+    outs() << "Running " << PASS_DESC << " on function " << FunctionName << "\n";
 
-    /**
+    for (inst_iterator Iter = inst_begin(F), E = inst_end(F); Iter != E; ++Iter) {
+      Instruction &Inst = (*Iter);
+      llvm::DebugLoc DebugLoc = Inst.getDebugLoc();
+      if (!DebugLoc) {
+        // Skip Instruction if it doesn't have debug information.
+        continue;
+      }
+
+      int Line = DebugLoc.getLine();
+      int Col = DebugLoc.getCol();
+
+      /**
      * TODO: Add code to check the type of instruction
      * and call appropriate instrumentation function.
      *
@@ -67,8 +75,10 @@ bool CBIInstrument::runOnFunction(Function &F) {
      *   use instrumentReturn
      * @param Branch
      */
+    }
   }
-  return true;
+
+  return PreservedAnalyses::none();
 }
 
 /**
@@ -97,7 +107,20 @@ void instrumentReturn(Module *M, CallInst *Call, int Line, int Col) {
    */
 }
 
-char CBIInstrument::ID = 1;
-static RegisterPass<CBIInstrument> X(PASS_NAME, PASS_DESC, false, false);
+// Pass registration for the new pass manager
+extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo llvmGetPassPluginInfo() {
+  return {LLVM_PLUGIN_API_VERSION, PASS_NAME, "1.0.0", [](PassBuilder &PB) {
+            PB.registerPipelineParsingCallback(
+                [](StringRef Name,
+                    ModulePassManager &MPM,
+                    ArrayRef<PassBuilder::PipelineElement>) {
+                  if (Name == PASS_NAME) {
+                    MPM.addPass(CBIInstrument());
+                    return true;
+                  }
+                  return false;
+                });
+          }};
+}
 
-} // namespace instrument
+}  // namespace instrument

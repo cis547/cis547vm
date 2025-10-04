@@ -216,8 +216,6 @@ class PredicateInfo:
         :return: The failure value.
         """
         # TODO: Implement the calculation of the failure value.
-
-
         return 0
 
     @property
@@ -228,7 +226,6 @@ class PredicateInfo:
         :return: The context value.
         """
         # TODO: Implement the calculation of the context value.
-
         return 0
 
     @property
@@ -239,7 +236,6 @@ class PredicateInfo:
         :return: The increase value.
         """
         # TODO: Implement the calculation of the increase value.
-
         return 0
 
     """
@@ -335,8 +331,10 @@ class Report:
         sorted_predicate_info = sorted(
             self.predicate_info_list, key=lambda pred_info: pred_info.predicate
         )
-        s_p = "\n".join(f"{info.predicate}: {info.s}" for info in sorted_predicate_info)
-        f_p = "\n".join(f"{info.predicate}: {info.f}" for info in sorted_predicate_info)
+        s_p = "\n".join(
+            f"{info.predicate}: {info.s}" for info in sorted_predicate_info)
+        f_p = "\n".join(
+            f"{info.predicate}: {info.f}" for info in sorted_predicate_info)
         failure = "\n".join(
             f"{info.predicate}: {info.failure}" for info in sorted_predicate_info
         )
