@@ -42,10 +42,11 @@ void __cbi_branch__(int line, int col, int cond) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".cbi.jsonl");
   FILE *f = fopen(logfile, "a");
-  fprintf(
-      f,
+  fprintf(f,
       "{\"kind\": \"branch\", \"line\": %d, \"column\": %d, \"value\": %s}\n",
-      line, col, cond ? "true" : "false");
+      line,
+      col,
+      cond ? "true" : "false");
   fclose(f);
 }
 
@@ -53,9 +54,10 @@ void __cbi_return__(int line, int col, int rv) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".cbi.jsonl");
   FILE *f = fopen(logfile, "a");
-  fprintf(
-      f,
+  fprintf(f,
       "{\"kind\": \"return\", \"line\": %d, \"column\": %d, \"value\": %d}\n",
-      line, col, rv);
+      line,
+      col,
+      rv);
   fclose(f);
 }

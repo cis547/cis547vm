@@ -4,16 +4,14 @@
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
+#include "llvm/Passes/PassBuilder.h"
 
 using namespace llvm;
 
 namespace instrument {
 
-struct CBIInstrument : public FunctionPass {
-  static char ID;
-
-  CBIInstrument() : FunctionPass(ID) {}
-
-  bool runOnFunction(Function &F) override;
+struct CBIInstrument : public PassInfoMixin<CBIInstrument> {
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 };
-} // namespace instrument
+
+}  // namespace instrument

@@ -37,7 +37,6 @@ def collect_observations(log: CBILog) -> Dict[Predicate, ObservationStatus]:
     Hint: The PredicateType.alternatives will come in handy.
     """
 
-
     return observations
 
 
@@ -52,7 +51,6 @@ def collect_all_predicates(logs: Iterable[CBILog]) -> Set[Predicate]:
 
     # TODO: Add your code here
 
-
     return predicates
 
 
@@ -64,15 +62,14 @@ def cbi(success_logs: List[CBILog], failure_logs: List[CBILog]) -> Report:
     :param failure_logs: logs of failing runs
     :return: the report
     """
-    all_predicates = collect_all_predicates(itertools.chain(success_logs, failure_logs))
+    all_predicates = collect_all_predicates(
+        itertools.chain(success_logs, failure_logs))
 
     predicate_infos: Dict[Predicate, PredicateInfo] = {
         pred: PredicateInfo(pred) for pred in all_predicates
     }
 
     # TODO: Add your code here to compute the information for each predicate.
-
-
 
     # Finally, create a report and return it.
     report = Report(predicate_info_list=list(predicate_infos.values()))
