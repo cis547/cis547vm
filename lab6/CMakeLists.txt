@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
+project(DivZeroAnalysis)
 
-find_package(LLVM 8 REQUIRED CONFIG)
+find_package(LLVM 14 REQUIRED CONFIG)
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(HandleLLVMOptions)
 include(AddLLVM)
@@ -26,10 +27,10 @@ if (USE_REFERENCE)
     src/Utils.cpp
   )
 
-  target_link_libraries(DivZeroPass HiddenAnalysis)
+  target_link_libraries(DivZeroPass PRIVATE HiddenAnalysis)
 
 else (USE_REFERENCE)
-  add_llvm_library(DivZeroPass MODULE
+  add_llvm_library(DivZeroPass MODULE # for creating libHiddenAnalysis.a: 1) change MODULE to OBJECT; 2) change DivZeroPass to HiddenAnalysis.
   src/DivZeroAnalysis.cpp
   src/Transfer.cpp
   src/ChaoticIteration.cpp

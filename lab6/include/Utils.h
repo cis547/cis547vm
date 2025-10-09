@@ -58,8 +58,8 @@ void printMemory(const Memory *Mem);
  * @param InMem The incoming memory.
  * @param OutMem The outgoing memory.
  */
-void printInstructionTransfer(Instruction *Inst, const Memory *InMem,
-                              const Memory *OutMem);
+void printInstructionTransfer(
+    Instruction *Inst, const Memory *InMem, const Memory *OutMem);
 
 /**
  * @brief Print the In and Out memory of every instruction in function F to
@@ -72,9 +72,10 @@ void printInstructionTransfer(Instruction *Inst, const Memory *InMem,
  * @param InMap Map of In memory of every instruction in function F.
  * @param OutMap Map of Out memory of every instruction in function F.
  */
-void printMap(Function &F, ValueMap<Instruction *, Memory *> &InMap,
-              ValueMap<Instruction *, Memory *> &OutMap);
+void printMap(Function &F,
+    std::map<Instruction *, Memory *> &InMap,
+    std::map<Instruction *, Memory *> &OutMap);
 
-} // namespace dataflow
+}  // namespace dataflow
 
-#endif // UTILS_H
+#endif  // UTILS_H

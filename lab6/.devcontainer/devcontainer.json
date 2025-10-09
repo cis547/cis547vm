@@ -2,22 +2,25 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.224.2/containers/cpp
 {
 	"name": "CIS 547 Lab Container",
-	"image": "cis547/cis547-base:latest",
+	"image": "ghcr.io/cis547/cis547vm:release",
+	// To build the dev container locally.
+	//	"build": {
+	//		"dockerfile": "<path to Dockerfile>"
+	//	},
 	"runArgs": [
+		"--platform",
+		"linux/arm64",
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
 		"seccomp=unconfined",
 		"--privileged"
 	],
-
 	// Set the env-variables for the container
 	"remoteEnv": {
 		"LD_LIBRARY_PATH": "${containerWorkspaceFolder}/build:${containerEnv:LD_LIBRARY_PATH}"
 	},
-
 	"workspaceMount": "source=${localWorkspaceFolder}/,target=/${localWorkspaceFolderBasename},type=bind",
 	"workspaceFolder": "/${localWorkspaceFolderBasename}",
-
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"cmake.environment": {
@@ -29,7 +32,6 @@
 			}
 		}
 	},
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-vscode.cpptools-extension-pack",
@@ -41,13 +43,10 @@
 		"usernamehw.errorlens",
 		"ms-vsliveshare.vsliveshare"
 	],
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "",
-
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode",
 	"features": {

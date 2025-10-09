@@ -6,5 +6,5 @@ void f() {
   if (x > 10) {
     y = 0;
   }
-  int z = x / y; // divide-by-zero after branch
+  int z = x / y;  // divide-by-zero after branch
 }

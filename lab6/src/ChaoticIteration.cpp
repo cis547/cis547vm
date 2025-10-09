@@ -19,8 +19,7 @@ std::vector<Instruction *> getPredecessors(Instruction *Inst) {
         Ret.push_back(&(*Iter));
         return Ret;
       }
-      for (auto Pre = pred_begin(Block), BE = pred_end(Block); Pre != BE;
-           ++Pre) {
+      for (auto Pre = pred_begin(Block), BE = pred_end(Block); Pre != BE; ++Pre) {
         Ret.push_back(&(*((*Pre)->rbegin())));
       }
       return Ret;
@@ -45,8 +44,7 @@ std::vector<Instruction *> getSuccessors(Instruction *Inst) {
         Ret.push_back(&(*Iter));
         return Ret;
       }
-      for (auto Succ = succ_begin(Block), BS = succ_end(Block);
-           Succ != BS; ++Succ) {
+      for (auto Succ = succ_begin(Block), BS = succ_end(Block); Succ != BS; ++Succ) {
         Ret.push_back(&(*((*Succ)->begin())));
       }
       return Ret;
@@ -73,7 +71,6 @@ Memory *join(Memory *Mem1, Memory *Mem2) {
    *   domain D2, then Domain::join D1 and D2 to find the new domain D,
    *   and add instruction I with domain D to the Result.
    */
-  return NULL;
 }
 
 void DivZeroAnalysis::flowIn(Instruction *Inst, Memory *InMem) {
@@ -104,11 +101,10 @@ bool equal(Memory *Mem1, Memory *Mem2) {
    * If any instruction I is present in Mem1 with domain D1 and in Mem2
    *   with domain D2, if D1 and D2 are unequal, then the memories are unequal.
    */
-  return false;
 }
 
-void DivZeroAnalysis::flowOut(Instruction *Inst, Memory *Pre, Memory *Post,
-                              SetVector<Instruction *> &WorkSet) {
+void DivZeroAnalysis::flowOut(
+    Instruction *Inst, Memory *Pre, Memory *Post, SetVector<Instruction *> &WorkSet) {
   /**
    * TODO: Write your code to implement flowOut.
    *
@@ -136,4 +132,4 @@ void DivZeroAnalysis::doAnalysis(Function &F) {
    */
 }
 
-} // namespace dataflow
+}  // namespace dataflow
