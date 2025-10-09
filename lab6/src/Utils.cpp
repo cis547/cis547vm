@@ -1,4 +1,5 @@
 #include "Utils.h"
+
 #include "DivZeroAnalysis.h"
 #include "Domain.h"
 
@@ -44,9 +45,8 @@ Domain::Element extractFromValue(const Value *Val) {
 }
 
 Domain *getOrExtract(const Memory *Mem, const Value *Val) {
-  return getOrDefault<Domain *>(Mem, variable(Val), [&V = Val] {
-    return new Domain(extractFromValue(V));
-  });
+  return getOrDefault<Domain *>(
+      Mem, variable(Val), [&V = Val] { return new Domain(extractFromValue(V)); });
 }
 
 void printMemory(const Memory *Mem) {
@@ -58,17 +58,17 @@ void printMemory(const Memory *Mem) {
   }
 }
 
-void printInstructionTransfer(Instruction *Inst, const Memory *InMem,
-                              const Memory *OutMem) {
+void printInstructionTransfer(
+    Instruction *Inst, const Memory *InMem, const Memory *OutMem) {
   auto InState = getOrExtract(InMem, Inst);
   auto OutState = getOrExtract(OutMem, Inst);
 
-  errs() << variable(Inst) << ":\t[ " << *InState << " --> " << *OutState
-         << " ]\n";
+  errs() << variable(Inst) << ":\t[ " << *InState << " --> " << *OutState << " ]\n";
 }
 
-void printMap(Function &F, ValueMap<Instruction *, Memory *> &InMap,
-              ValueMap<Instruction *, Memory *> &OutMap) {
+void printMap(Function &F,
+    std::map<Instruction *, Memory *> &InMap,
+    std::map<Instruction *, Memory *> &OutMap) {
   errs() << "Dataflow Analysis Results:\n";
   for (inst_iterator Iter = inst_begin(F), E = inst_end(F); Iter != E; ++Iter) {
     auto Inst = &(*Iter);
@@ -83,4 +83,4 @@ void printMap(Function &F, ValueMap<Instruction *, Memory *> &InMap,
   }
 }
 
-} // namespace dataflow
+}  // namespace dataflow

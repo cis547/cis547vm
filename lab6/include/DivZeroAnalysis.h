@@ -1,40 +1,40 @@
 #ifndef DIV_ZERO_ANALYSIS_H
 #define DIV_ZERO_ANALYSIS_H
 
+#include "Domain.h"
 #include "llvm/ADT/SetVector.h"
 #include "llvm/IR/CFG.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
-#include "llvm/IR/ValueMap.h"
-#include "llvm/Pass.h"
+
+#include "llvm/IR/PassManager.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
+
 #include <algorithm>
 #include <iterator>
 #include <map>
 #include <string>
 
-#include "Domain.h"
-
 namespace dataflow {
 
 using Memory = std::map<std::string, Domain *>;
 
-struct DivZeroAnalysis : public FunctionPass {
-  static char ID;
-  DivZeroAnalysis() : FunctionPass(ID) {}
-  ValueMap<Instruction *, Memory *> InMap;
-  ValueMap<Instruction *, Memory *> OutMap;
-  SetVector<Instruction *> ErrorInsts;
+struct DivZeroAnalysis : public llvm::PassInfoMixin<DivZeroAnalysis> {
+  std::map<llvm::Instruction *, Memory *> InMap;
+  std::map<llvm::Instruction *, Memory *> OutMap;
+  llvm::SetVector<llvm::Instruction *> ErrorInsts;
 
   /**
    * This function is called for each function F in the input C program
    * that the compiler encounters during a pass.
    * You do not need to modify this function.
    */
-  bool runOnFunction(Function &F) override;
+  llvm::PreservedAnalyses run(llvm::Function &F, llvm::FunctionAnalysisManager &);
 
-protected:
+ protected:
   /**
    * This function creates a transfer function that updates the Out Memory based
    * on In Memory and the instruction type/parameters.
@@ -67,8 +67,8 @@ protected:
    * @param Post Current OutMemory of Inst.
    * @param WorkSet WorkSet
    */
-  void flowOut(Instruction *Inst, Memory *Pre, Memory *Post,
-               SetVector<Instruction *> &WorkSet);
+  void flowOut(
+      Instruction *Inst, Memory *Pre, Memory *Post, SetVector<Instruction *> &WorkSet);
 
   /**
    * Can the Instruction Inst incurr a divide by zero error?
@@ -78,8 +78,10 @@ protected:
    */
   bool check(Instruction *Inst);
 
-  std::string getAnalysisName() { return "DivZero"; }
+  std::string getAnalysisName() {
+    return "DivZero";
+  }
 };
-} // namespace dataflow
+}  // namespace dataflow
 
-#endif // DIV_ZERO_ANALYSIS_H
+#endif  // DIV_ZERO_ANALYSIS_H

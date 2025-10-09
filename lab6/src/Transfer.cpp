@@ -12,8 +12,7 @@ namespace dataflow {
 bool isInput(Instruction *Inst) {
   if (auto Call = dyn_cast<CallInst>(Inst)) {
     if (auto Fun = Call->getCalledFunction()) {
-      return (Fun->getName().equals("getchar") ||
-              Fun->getName().equals("fgetc"));
+      return (Fun->getName().equals("getchar") || Fun->getName().equals("fgetc"));
     }
   }
   return false;
@@ -66,7 +65,6 @@ Domain *eval(CastInst *Cast, const Memory *InMem) {
   /**
    * TODO: Write your code here to evaluate Cast instruction.
    */
-  return NULL;
 }
 
 /**
@@ -85,11 +83,9 @@ Domain *eval(CmpInst *Cmp, const Memory *InMem) {
    * NOTE: There is a lot of scope for refining this, but you can just return
    * MaybeZero for comparisons other than equality.
    */
-   return NULL;
 }
 
-void DivZeroAnalysis::transfer(Instruction *Inst, const Memory *In,
-                               Memory &NOut) {
+void DivZeroAnalysis::transfer(Instruction *Inst, const Memory *In, Memory &NOut) {
   if (isInput(Inst)) {
     // The instruction is a user controlled input, it can have any value.
     NOut[variable(Inst)] = new Domain(Domain::MaybeZero);
@@ -122,4 +118,4 @@ void DivZeroAnalysis::transfer(Instruction *Inst, const Memory *In,
   }
 }
 
-} // namespace dataflow
+}  // namespace dataflow

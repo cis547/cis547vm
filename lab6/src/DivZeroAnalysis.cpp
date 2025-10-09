@@ -1,4 +1,5 @@
 #include "DivZeroAnalysis.h"
+
 #include "Utils.h"
 
 namespace dataflow {
@@ -31,10 +32,9 @@ bool DivZeroAnalysis::check(Instruction *Inst) {
    *
    * Hint: getOrExtract function may be useful to simplify your code.
    */
-  return false;
 }
 
-bool DivZeroAnalysis::runOnFunction(Function &F) {
+PreservedAnalyses DivZeroAnalysis::run(Function &F, FunctionAnalysisManager &) {
   outs() << "Running " << getAnalysisName() << " on " << F.getName() << "\n";
 
   // Initializing InMap and OutMap.
@@ -64,10 +64,21 @@ bool DivZeroAnalysis::runOnFunction(Function &F) {
     delete InMap[&(*Iter)];
     delete OutMap[&(*Iter)];
   }
-  return false;
+  return PreservedAnalyses::all();
 }
 
-char DivZeroAnalysis::ID = 1;
-static RegisterPass<DivZeroAnalysis> X("DivZero", "Divide-by-zero Analysis",
-                                       false, false);
-} // namespace dataflow
+extern "C" LLVM_ATTRIBUTE_WEAK ::llvm::PassPluginLibraryInfo llvmGetPassPluginInfo() {
+  return {LLVM_PLUGIN_API_VERSION, "DivZero", "v0.1", [](PassBuilder &PB) {
+            PB.registerPipelineParsingCallback(
+                [](StringRef Name,
+                    ModulePassManager &MPM,
+                    ArrayRef<PassBuilder::PipelineElement>) {
+                  if (Name == "DivZero") {
+                    MPM.addPass(createModuleToFunctionPassAdaptor(DivZeroAnalysis()));
+                    return true;
+                  }
+                  return false;
+                });
+          }};
+}
+}  // namespace dataflow
