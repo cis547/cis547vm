@@ -8,8 +8,6 @@
 	//		"dockerfile": "<path to Dockerfile>"
 	//	},
 	"runArgs": [
-		"--platform",
-		"linux/arm64",
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
 		"seccomp=unconfined",
