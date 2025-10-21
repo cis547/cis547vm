@@ -1,4 +1,4 @@
-# Lab 6: Static Analysis for Divide-by-Zero Errors
+# Lab 6: Dataflow Analysis
 
 ## 1. Objective
 
@@ -177,6 +177,9 @@ Note: `PHINode` instructions merge values from different control-flow paths. The
 
 ### Build and Test Part 1
 
+
+> ⚠️ **Important:** If you're on an x86-64 system, rename `reference/libHiddenAnalysis.x86-64.a` to `reference/libHiddenAnalysis.a`. Also, rename the original `libHiddenAnalysis.a` to avoid conflicts, since it was built for ARM64/AARCH64.
+
 Build with the reference solution for Part 2:
 
 ```sh
@@ -246,7 +249,7 @@ define dso_local i32 @main() {
 Run your DivZero pass:
 
 ```sh
-lab6/test$ opt -load ../build/DivZeroPass.so -DivZero -disable-output test01.opt.ll > test01.out 2> test01.err
+lab6/test$ opt -load-pass-plugin=../build/DivZeroPass.so -passes="DivZero" -disable-output test01.opt.ll > test01.out 2> test01.err
 ```
 
 Output files:
@@ -350,7 +353,7 @@ After implementing Part 2, rebuild and test:
 
 ```sh
 lab6/build$ make
-lab6/test$ opt -load ../build/DivZeroPass.so -DivZero -disable-output test01.opt.ll > test01.out 2> test01.err
+lab6/test$ opt -load-pass-plugin=../build/DivZeroPass.so -passes="DivZero" -disable-output test01.opt.ll > test01.out 2> test01.err
 ```
 
 ### Debugging Part 2
@@ -441,6 +444,7 @@ lab6$ make submit
 ```
 
 This creates `submission.zip` containing your source files. Upload it to Gradescope.
+
 ---
 
 ## 8. Tips for Success
