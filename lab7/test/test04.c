@@ -3,6 +3,6 @@ void f() {
   int y = 2;
   int z;
   if (x < 1) {
-    z = y / x; // divide-by-zero within branch
+    z = y / x;  // divide-by-zero within branch
   }
 }

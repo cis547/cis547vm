@@ -15,8 +15,13 @@ namespace dataflow {
  * Implement your abstract domain.
  */
 class Domain {
-public:
-  enum Element { Uninit, NonZero, Zero, MaybeZero };
+ public:
+  enum Element {
+    Uninit,
+    NonZero,
+    Zero,
+    MaybeZero
+  };
   Domain();
   Domain(Element V);
   Element Value;
@@ -32,6 +37,6 @@ public:
 
 raw_ostream &operator<<(raw_ostream &O, Domain V);
 
-} // namespace dataflow
+}  // namespace dataflow
 
-#endif // DOMAIN_H
+#endif  // DOMAIN_H

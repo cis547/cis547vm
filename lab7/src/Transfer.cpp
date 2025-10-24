@@ -12,8 +12,7 @@ namespace dataflow {
 bool isInput(Instruction *Inst) {
   if (auto Call = dyn_cast<CallInst>(Inst)) {
     if (auto Fun = Call->getCalledFunction()) {
-      return (Fun->getName().equals("getchar") ||
-              Fun->getName().equals("fgetc"));
+      return (Fun->getName().equals("getchar") || Fun->getName().equals("fgetc"));
     }
   }
   return false;
@@ -89,9 +88,11 @@ Domain *eval(CmpInst *Cmp, const Memory *InMem) {
   return NULL;
 }
 
-void DivZeroAnalysis::transfer(Instruction *Inst, const Memory *In,
-                               Memory &NOut, PointerAnalysis *PA,
-                               SetVector<Value *> PointerSet) {
+void DivZeroAnalysis::transfer(Instruction *Inst,
+    const Memory *In,
+    Memory &NOut,
+    PointerAnalysis *PA,
+    SetVector<Value *> PointerSet) {
   if (isInput(Inst)) {
     // The instruction is a user controlled input, it can have any value.
     NOut[variable(Inst)] = new Domain(Domain::MaybeZero);
@@ -153,4 +154,4 @@ void DivZeroAnalysis::transfer(Instruction *Inst, const Memory *In,
   }
 }
 
-} // namespace dataflow
+}  // namespace dataflow

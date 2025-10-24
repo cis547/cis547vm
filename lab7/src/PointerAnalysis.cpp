@@ -1,6 +1,6 @@
 #include "PointerAnalysis.h"
-#include "Utils.h"
 
+#include "Utils.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Instructions.h"
 
@@ -21,8 +21,8 @@ void PointerAnalysis::transfer(Instruction *Inst, PointsToInfo &PointsTo) {
     for (auto &I : L) {
       PointsToSet &S = PointsTo[I];
       PointsToSet Result;
-      std::set_union(S.begin(), S.end(), R.begin(), R.end(),
-                     std::inserter(Result, Result.begin()));
+      std::set_union(
+          S.begin(), S.end(), R.begin(), R.end(), std::inserter(Result, Result.begin()));
       PointsTo[I] = Result;
     }
   } else if (LoadInst *Load = dyn_cast<LoadInst>(Inst)) {
@@ -34,8 +34,11 @@ void PointerAnalysis::transfer(Instruction *Inst, PointsToInfo &PointsTo) {
     PointsToSet Result;
     for (auto &I : R) {
       PointsToSet &S = PointsTo[I];
-      std::set_union(S.begin(), S.end(), Result.begin(), Result.end(),
-                     std::inserter(Result, Result.begin()));
+      std::set_union(S.begin(),
+          S.end(),
+          Result.begin(),
+          Result.end(),
+          std::inserter(Result, Result.begin()));
     }
     PointsTo[variable(Load)] = Result;
   }
@@ -79,16 +82,15 @@ PointerAnalysis::PointerAnalysis(Function &F) {
 }
 
 bool PointerAnalysis::alias(std::string &Ptr1, std::string &Ptr2) const {
-  if (PointsTo.find(Ptr1) == PointsTo.end() ||
-      PointsTo.find(Ptr2) == PointsTo.end())
+  if (PointsTo.find(Ptr1) == PointsTo.end() || PointsTo.find(Ptr2) == PointsTo.end())
     return false;
   const PointsToSet &S1 = PointsTo.at(Ptr1);
   const PointsToSet &S2 = PointsTo.at(Ptr2);
 
   PointsToSet Inter;
-  std::set_intersection(S1.begin(), S1.end(), S2.begin(), S2.end(),
-                        std::inserter(Inter, Inter.begin()));
+  std::set_intersection(
+      S1.begin(), S1.end(), S2.begin(), S2.end(), std::inserter(Inter, Inter.begin()));
   return !Inter.empty();
 }
 
-}; // namespace dataflow
+};  // namespace dataflow
