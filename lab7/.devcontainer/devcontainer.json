@@ -2,7 +2,11 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.224.2/containers/cpp
 {
 	"name": "CIS 547 Lab Container",
-	"image": "cis547/cis547-base:latest",
+	"image": "ghcr.io/cis547/cis547vm:release",
+	// To build the dev container locally.
+	//	"build": {
+	//		"dockerfile": "<path to Dockerfile>"
+	//	},
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",

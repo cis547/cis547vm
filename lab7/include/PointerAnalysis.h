@@ -2,6 +2,8 @@
 #define POINTER_ANALYSIS_H
 
 #include "llvm/IR/Function.h"
+
+#include <map>
 #include <set>
 
 using namespace llvm;
@@ -20,7 +22,7 @@ using PointsToSet = std::set<std::string>;
  */
 using PointsToInfo = std::map<std::string, PointsToSet>;
 class PointerAnalysis {
-public:
+ public:
   /**
    * @brief Build a points-to graph
    *
@@ -48,7 +50,7 @@ public:
    */
   bool alias(std::string &Ptr1, std::string &Ptr2) const;
 
-private:
+ private:
   PointsToInfo PointsTo;
 
   /**
@@ -66,6 +68,6 @@ private:
    */
   void print(std::map<std::string, PointsToSet> &PointsTo);
 };
-}; // namespace dataflow
+};  // namespace dataflow
 
-#endif // POINTER_ANALYSIS_H
+#endif  // POINTER_ANALYSIS_H

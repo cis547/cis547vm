@@ -1,47 +1,48 @@
 #ifndef DIV_ZERO_ANALYSIS_H
 #define DIV_ZERO_ANALYSIS_H
 
-#include "llvm/ADT/SetVector.h"
-#include "llvm/IR/CFG.h"
+#include "Domain.h"
+#include "PointerAnalysis.h"
+#include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/InstIterator.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/ValueMap.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
-#include "llvm/Support/raw_ostream.h"
+#include "llvm/Passes/PassBuilder.h"
+
 #include <algorithm>
 #include <iterator>
 #include <map>
 #include <string>
 
-#include "Domain.h"
-#include "PointerAnalysis.h"
-
 namespace dataflow {
 
 using Memory = std::map<std::string, Domain *>;
 
-struct DivZeroAnalysis : public FunctionPass {
+struct DivZeroAnalysis : public PassInfoMixin<DivZeroAnalysis> {
   static char ID;
-  DivZeroAnalysis() : FunctionPass(ID) {}
-  ValueMap<Instruction *, Memory *> InMap;
-  ValueMap<Instruction *, Memory *> OutMap;
+  std::map<Instruction *, Memory *> InMap;
+  std::map<Instruction *, Memory *> OutMap;
   SetVector<Instruction *> ErrorInsts;
 
   /**
-   * This function is called for each function F in the input C program
+   * This function is called for each module M in the input C program
    * that the compiler encounters during a pass.
    * You do not need to modify this function.
    */
-  bool runOnFunction(Function &F) override;
+  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
 
-protected:
+ protected:
   /**
    * This function creates a transfer function that updates the Out Memory based
    * on In Memory and the instruction type/parameters.
    */
-  void transfer(Instruction *I, const Memory *In, Memory &NOut,
-                PointerAnalysis *PA, SetVector<Value *> PointerSet);
+  void transfer(Instruction *I,
+      const Memory *In,
+      Memory &NOut,
+      PointerAnalysis *PA,
+      SetVector<Value *> PointerSet);
 
   /**
    * @brief This function implements the chaotic iteration algorithm using
@@ -69,8 +70,8 @@ protected:
    * @param Post Current OutMemory of Inst.
    * @param WorkSet WorkSet
    */
-  void flowOut(Instruction *Inst, Memory *Pre, Memory *Post,
-               SetVector<Instruction *> &WorkSet);
+  void flowOut(
+      Instruction *Inst, Memory *Pre, Memory *Post, SetVector<Instruction *> &WorkSet);
 
   /**
    * Can the Instruction Inst incurr a divide by zero error?
@@ -80,8 +81,10 @@ protected:
    */
   bool check(Instruction *Inst);
 
-  std::string getAnalysisName() { return "DivZero"; }
+  std::string getAnalysisName() {
+    return "DivZero";
+  }
 };
-} // namespace dataflow
+}  // namespace dataflow
 
-#endif // DIV_ZERO_ANALYSIS_H
+#endif  // DIV_ZERO_ANALYSIS_H

@@ -1,5 +1,7 @@
 #include "DivZeroAnalysis.h"
+
 #include "Utils.h"
+#include <llvm/Passes/PassPlugin.h>
 
 namespace dataflow {
 
@@ -34,43 +36,68 @@ bool DivZeroAnalysis::check(Instruction *Inst) {
   return false;
 }
 
-bool DivZeroAnalysis::runOnFunction(Function &F) {
-  outs() << "Running " << getAnalysisName() << " on " << F.getName() << "\n";
+const auto PASS_NAME = "DivZero";
+const auto PASS_DESC = "Divide-by-zero Analysis";
 
-  // Initializing InMap and OutMap.
-  for (inst_iterator Iter = inst_begin(F), End = inst_end(F); Iter != End;
-       ++Iter) {
-    auto Inst = &(*Iter);
-    InMap[Inst] = new Memory;
-    OutMap[Inst] = new Memory;
+PreservedAnalyses DivZeroAnalysis::run(Module &M, ModuleAnalysisManager &AM) {
+  outs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
+
+  auto &Context = M.getContext();
+
+  for (auto &F : M) {
+    if (F.isDeclaration()) {
+      continue;
+    }
+
+    outs() << "Running " << getAnalysisName() << " on " << F.getName() << "\n";
+
+    // Initializing InMap and OutMap.
+    for (inst_iterator Iter = inst_begin(F), End = inst_end(F); Iter != End; ++Iter) {
+      auto Inst = &(*Iter);
+      InMap[Inst] = new Memory;
+      OutMap[Inst] = new Memory;
+    }
+
+    // The chaotic iteration algorithm is implemented inside doAnalysis().
+    auto PA = new PointerAnalysis(F);
+    doAnalysis(F, PA);
+
+    // Check each instruction in function F for potential divide-by-zero error.
+    for (inst_iterator Iter = inst_begin(F), End = inst_end(F); Iter != End; ++Iter) {
+      auto Inst = &(*Iter);
+      if (check(Inst))
+        ErrorInsts.insert(Inst);
+    }
+
+    printMap(F, InMap, OutMap);
+    outs() << "Potential Instructions by " << getAnalysisName() << ": \n";
+    for (auto Inst : ErrorInsts) {
+      outs() << *Inst << "\n";
+    }
+
+    for (auto Iter = inst_begin(F), End = inst_end(F); Iter != End; ++Iter) {
+      delete InMap[&(*Iter)];
+      delete OutMap[&(*Iter)];
+    }
   }
 
-  // The chaotic iteration algorithm is implemented inside doAnalysis().
-  auto PA = new PointerAnalysis(F);
-  doAnalysis(F, PA);
-
-  // Check each instruction in function F for potential divide-by-zero error.
-  for (inst_iterator Iter = inst_begin(F), End = inst_end(F); Iter != End;
-       ++Iter) {
-    auto Inst = &(*Iter);
-    if (check(Inst))
-      ErrorInsts.insert(Inst);
-  }
-
-  printMap(F, InMap, OutMap);
-  outs() << "Potential Instructions by " << getAnalysisName() << ": \n";
-  for (auto Inst : ErrorInsts) {
-    outs() << *Inst << "\n";
-  }
-
-  for (auto Iter = inst_begin(F), End = inst_end(F); Iter != End; ++Iter) {
-    delete InMap[&(*Iter)];
-    delete OutMap[&(*Iter)];
-  }
-  return false;
+  return PreservedAnalyses::all();
 }
 
-char DivZeroAnalysis::ID = 1;
-static RegisterPass<DivZeroAnalysis> X("DivZero", "Divide-by-zero Analysis",
-                                       false, false);
-} // namespace dataflow
+// Pass registration for the new pass manager
+extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo llvmGetPassPluginInfo() {
+  return {LLVM_PLUGIN_API_VERSION, PASS_NAME, "1.0.0", [](PassBuilder &PB) {
+            PB.registerPipelineParsingCallback(
+                [](StringRef Name,
+                    ModulePassManager &MPM,
+                    ArrayRef<PassBuilder::PipelineElement>) {
+                  if (Name == PASS_NAME) {
+                    MPM.addPass(DivZeroAnalysis());
+                    return true;
+                  }
+                  return false;
+                });
+          }};
+}
+
+}  // namespace dataflow

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
+project(pointer_analysis)
 
-find_package(LLVM 8 REQUIRED CONFIG)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(LLVM 14 REQUIRED CONFIG)
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(HandleLLVMOptions)
 include(AddLLVM)
