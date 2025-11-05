@@ -10,5 +10,5 @@ int main(int argc, char **argv) {
     x = tainted_input();
     y = x;
   }
-  int z = 4 / y; // alarm
+  int z = 4 / y;  // alarm
 }

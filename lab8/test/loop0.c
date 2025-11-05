@@ -9,5 +9,5 @@ int main(int argc, char **argv) {
     y = x;
     argc--;
   }
-  int z = 4 / y; // alarm
+  int z = 4 / y;  // alarm
 }

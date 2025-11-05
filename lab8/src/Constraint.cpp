@@ -1,20 +1,20 @@
+#include "Extractor.h"
 #include "llvm/AsmParser/Parser.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/SourceMgr.h"
-#include <fstream>
 #include <sys/stat.h>
 
-#include "Extractor.h"
+#include <fstream>
 
-#define ARG_EXIST_CHECK(Name, Arg)                                             \
-  {                                                                            \
-    struct stat Buffer;                                                        \
-    if (stat(Arg, &Buffer)) {                                                  \
-      fprintf(stderr, "%s not found\n", Arg);                                  \
-      return 1;                                                                \
-    }                                                                          \
-  }                                                                            \
+#define ARG_EXIST_CHECK(Name, Arg)                                                       \
+  {                                                                                      \
+    struct stat Buffer;                                                                  \
+    if (stat(Arg, &Buffer)) {                                                            \
+      fprintf(stderr, "%s not found\n", Arg);                                            \
+      return 1;                                                                          \
+    }                                                                                    \
+  }                                                                                      \
   std::string Name(Arg);
 
 using namespace llvm;

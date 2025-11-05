@@ -7,5 +7,5 @@ int main(int argc, char **argv) {
   while (x > 0) {
     y = sanitizer(y);
   }
-  int z = 4 / y; // alarm
+  int z = 4 / y;  // alarm
 }

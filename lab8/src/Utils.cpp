@@ -22,13 +22,11 @@ std::string toString(Value *Val) {
 std::vector<Instruction *> getPredecessors(Instruction *I) {
   std::vector<Instruction *> Ret;
   BasicBlock *BB = I->getParent();
-  for (BasicBlock::reverse_iterator It = BB->rbegin(), E = BB->rend(); It != E;
-       ++It) {
+  for (BasicBlock::reverse_iterator It = BB->rbegin(), E = BB->rend(); It != E; ++It) {
     if (&(*It) == I) {
       ++It;
       if (It == E) {
-        for (pred_iterator Pre = pred_begin(BB), BE = pred_end(BB); Pre != BE;
-             ++Pre)
+        for (pred_iterator Pre = pred_begin(BB), BE = pred_end(BB); Pre != BE; ++Pre)
           Ret.push_back(&(*((*Pre)->rbegin())));
       } else {
         Ret.push_back(&(*It));
@@ -40,9 +38,17 @@ std::vector<Instruction *> getPredecessors(Instruction *I) {
 }
 
 bool isTaintedInput(CallInst *CI) {
-  return CI->getCalledFunction()->getName().equals("tainted_input");
+  Value *calledValue = CI->getCalledOperand();
+  if (Function *F = dyn_cast<Function>(calledValue->stripPointerCasts())) {
+    return F->getName().equals("tainted_input");
+  }
+  return false;
 }
 
 bool isSanitizer(CallInst *CI) {
-  return CI->getCalledFunction()->getName().equals("sanitizer");
+  Value *calledValue = CI->getCalledOperand();
+  if (Function *F = dyn_cast<Function>(calledValue->stripPointerCasts())) {
+    return F->getName().equals("sanitizer");
+  }
+  return false;
 }
