@@ -13,4 +13,4 @@ bool isTaintedInput(CallInst *CI);
 
 bool isSanitizer(CallInst *CI);
 
-#endif // UTILS_H
+#endif  // UTILS_H

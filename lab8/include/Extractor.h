@@ -1,15 +1,16 @@
 #ifndef EXTRACTOR_H
 #define EXTRACTOR_H
 
+#include "Utils.h"
 #include "llvm/ADT/MapVector.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Type.h"
+
 #include <fstream>
 #include <iostream>
 #include <set>
-
-#include "Utils.h"
+#include <map>
 
 using namespace llvm;
 
@@ -17,7 +18,7 @@ using InstMapTy = std::map<Value *, unsigned int>;
 using DefMapTy = std::map<Value *, std::set<Value *>>;
 
 class Extractor {
-public:
+ public:
   Extractor(const std::string OutDir) {
     DefFile.open(OutDir + "/def.facts");
     UseFile.open(OutDir + "/use.facts");
@@ -46,13 +47,13 @@ public:
   void extractConstraints(const InstMapTy &InstMap, Instruction *I);
 
   void printTuple(std::string Name, Value *V1, Value *V2) {
-    std::cerr << Name << "(\"" << toString(V1) << "\", \"" << toString(V2)
-              << "\")" << std::endl;
+    std::cerr << Name << "(\"" << toString(V1) << "\", \"" << toString(V2) << "\")"
+              << std::endl;
   }
 
-private:
+ private:
   std::map<Value *, std::set<Value *>> DefMap;
   std::ofstream DefFile, UseFile, NextFile, TaintFile, SanitizerFile, DivFile;
 };
 
-#endif // EXTRACTOR_H
+#endif  // EXTRACTOR_H

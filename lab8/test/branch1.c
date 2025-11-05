@@ -9,5 +9,5 @@ int main(int argc, char **argv) {
   } else {
     y = not_sanitizer(x);
   }
-  int z = 4 / y; // alarm
+  int z = 4 / y;  // alarm
 }
