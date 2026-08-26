@@ -97,6 +97,22 @@ cd /tmp/tmp.wHgzI1ZHNu && agy -p ...
 If you see an error from Antigravity, that asks, `Please set an Auth method`,
 make sure you followed the [Course VM and Lab Instructions][course-vm].
 
+If instead Antigravity reports that a tool `required the "command" permission
+that headless mode cannot prompt for`, it needs permission rules.
+The Makefile runs `agy -p`, which is non-interactive, so the CLI cannot ask you
+to approve the tools it wants to use, and denies them instead.
+Grant them up front by installing the rules provided in `lab1/agy-settings.json`:
+
+```sh
+/lab1$ mkdir -p ~/.gemini/antigravity-cli
+/lab1$ cp agy-settings.json ~/.gemini/antigravity-cli/settings.json
+```
+
+If that file already exists, merge the `permissions` block into it instead of
+copying over it, so your other settings are preserved.
+This is a one-time setup: `~/.gemini` lives on a Docker volume, so the rules
+persist across container rebuilds.
+
 Ignore the error reported by Make above; it is normal because
 AFL++ keeps running until it is forcibly terminated by the timeout command.
 Feel free to experiment by changing the timeout which is set to 30 seconds.
