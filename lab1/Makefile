@@ -24,14 +24,14 @@ results/agy_logs/%_overapprox_out.txt: c_programs/%.c
 	# Sandboxing to avoid information leaking (Antigravity will cheat off other tools)
 	$(eval TMPDIR := $(shell mktemp -d))
 	@cp $< $(TMPDIR)/$(notdir $<)
-	cd $(TMPDIR) && agy -p "analyze @$(notdir $<) and report any divide-by-zero errors (YES or NO). Prefer false positives over false negatives." > $(CURDIR)/$@
+	cd $(TMPDIR) && agy --add-dir $(TMPDIR) -p "analyze @$(notdir $<) and report any divide-by-zero errors (YES or NO). Prefer false positives over false negatives." > $(CURDIR)/$@
 
 results/agy_logs/%_underapprox_out.txt: c_programs/%.c
 	@mkdir -p results/agy_logs
 	# Sandboxing to avoid information leaking (Antigravity will cheat off other tools)
 	$(eval TMPDIR := $(shell mktemp -d))
 	cp $< $(TMPDIR)/$(notdir $<)
-	cd $(TMPDIR) && agy -p "analyze @$(notdir $<) and report any divide-by-zero errors (YES or NO). Prefer false negatives over false positives." > $(CURDIR)/$@
+	cd $(TMPDIR) && agy --add-dir $(TMPDIR) -p "analyze @$(notdir $<) and report any divide-by-zero errors (YES or NO). Prefer false negatives over false positives." > $(CURDIR)/$@
 
 
 %: results/afl_logs/%/out.txt results/ikos_logs/%_int_out.txt results/ikos_logs/%_dbm_out.txt results/agy_logs/%_overapprox_out.txt results/agy_logs/%_underapprox_out.txt

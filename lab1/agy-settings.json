@@ -1,0 +1,9 @@
+{
+  "enableTerminalSandbox": true,
+  "permissions": {
+    "allow": [
+      "command(*)",
+      "read_file(*.c)"
+    ]
+  }
+}
