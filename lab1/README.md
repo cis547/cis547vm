@@ -46,7 +46,7 @@ Ensure that you are comfortable with using `Makefile` in this lab.
 
 ### Step 4.
 
-Inspect the Makefile to see the commands used to run AFL++, IKOS and Gemini.
+Inspect the Makefile to see the commands used to run AFL++, IKOS, and Antigravity.
 
 ```sh
 # Compile the program with AFL++
@@ -56,8 +56,8 @@ AFL_NO_UI=1 timeout 30s afl-fuzz -i afl_input -o afl_output -m none test1
 # Run IKOS on test1.c with interval and DBM abstraction respectively
 ikos --opt none -a dbz -d interval c_programs/test1.c
 ikos --opt none -a dbz -d dbm c_programs/test1.c
-# Run Gemini on test1.c, asking it to be more conservative
-gemini -p "analyze @test1.c and report any divide-by-zero errors (YES or NO). Prefer false positives over false negatives."
+# Run Antigravity on test1.c, asking it to be more conservative
+agy -p "analyze @test1.c and report any divide-by-zero errors (YES or NO). Prefer false positives over false negatives."
 ```
 
 ## Lab Instructions
@@ -67,13 +67,13 @@ study the tools’ results, and report your findings.
 
 ### Step 1.
 
-Run the provided analysis tools, AFL++, IKOS, and Gemini on all C programs
+Run the provided analysis tools, AFL++, IKOS, and Antigravity on all C programs
 located under the `lab1/c_programs` directory.
 To do so, simply run the following command,
 which first runs AFL++ with a timeout of 30 seconds per program,
 and then runs IKOS with interval (int)
 and difference bound matrix (dbm) abstractions,
-followed by using the Gemini CLI with two different prompts.
+followed by using the Antigravity CLI with two different prompts.
 
 ```sh
 /lab1$ make
@@ -89,12 +89,12 @@ Makefile:8: recipe for target 'results/afl_logs/test1/out.txt' failed
 make: [results/afl_logs/test1/out.txt] Error 124 (ignored)
 ikos --opt none -a dbz -d interval c_programs/test1.c ...
 ikos --opt none -a dbz -d dbm c_programs/test1.c ...
-# Sandboxing to avoid information leaking (Gemini will cheat off other tools)
-cd /tmp/tmp.wHgzI1ZHNu && gemini -p ...
+# Sandboxing to avoid information leaking (Antigravity will cheat off other tools)
+cd /tmp/tmp.wHgzI1ZHNu && agy -p ...
 ...
 ```
 
-If you see an error from Gemini, that asks, `Please set an Auth method`,
+If you see an error from Antigravity, that asks, `Please set an Auth method`,
 make sure you followed the [Course VM and Lab Instructions][course-vm].
 
 Ignore the error reported by Make above; it is normal because
@@ -103,7 +103,7 @@ Feel free to experiment by changing the timeout which is set to 30 seconds.
 You can remove `AFL_NO_UI=1` when running it yourself, to get a nice display.
 We do not expect everyone to report the same solutions since AFL++ is non-deterministic anyway.
 
-We encourage you to experiment with the prompts to Gemini.
+We encourage you to experiment with the prompts to Antigravity.
 See how the output differs when the prompt includes phrases like, "Explain your reasoning", "Provide a failing input", or "Give a score of how confident you are".
 
 On running the make command, the following files and directories should be generated
@@ -124,7 +124,7 @@ under the `lab1/results` directory:
    │   ├── ... // similar for test2
    │   ...
    │
-   └── gemini_logs/
+   └── agy_logs/
        ├── test1_overapprox_out.txt
        ├── test1_underapprox_out.txt
        ├── ... // similar for test2
@@ -144,7 +144,7 @@ We provide the ground truth for the last programs already.
 
 ### Step 3.
 
-Study the output of AFL++, IKOS, and Gemini, and determine if they accept or reject each program.
+Study the output of AFL++, IKOS, and Antigravity, and determine if they accept or reject each program.
 Fill in your answers in file `lab1/answers.txt` in the corresponding columns of
 the table for each test program.
 
