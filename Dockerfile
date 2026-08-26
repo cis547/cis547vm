@@ -68,10 +68,11 @@ RUN chsh -s /usr/bin/zsh
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 COPY zshrc /root/.zshrc
 
-# Install Gemini CLI
+# Install AI assistant CLIs: Antigravity (agy) and Gemini
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
-    npm install -g @google/gemini-cli
+    npm install -g @google/gemini-cli && \
+    curl -fsSL https://antigravity.google/cli/install.sh | bash
 
 # Set-up symlinks for LLVM-14 toolchain.
 RUN rm -rf /usr/bin/clang /usr/bin/clang++ /usr/bin/llvm-config /usr/bin/opt && \

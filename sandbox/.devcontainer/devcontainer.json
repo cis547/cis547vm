@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.224.2/containers/cpp
 {
 	"name": "CIS 547 Lab Container",
-	"image": "cis547/cis547-base:latest",
+	"image": "ghcr.io/cis547/cis547vm:release",
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",
 		"--security-opt",
@@ -14,6 +14,13 @@
 	"remoteEnv": {
 		"LD_LIBRARY_PATH": "${containerWorkspaceFolder}/build:${containerEnv:LD_LIBRARY_PATH}"
 	},
+
+	// Persist Gemini and Antigravity logins across container rebuilds. Antigravity keeps
+	// its tokens under ~/.gemini/antigravity-cli/, so one volume covers both CLIs.
+	// The named volume is shared by all lab containers: sign in once, stay signed in.
+	"mounts": [
+		"source=cis547-gemini,target=/root/.gemini,type=volume"
+	],
 
 	"workspaceMount": "source=${localWorkspaceFolder}/,target=/${localWorkspaceFolderBasename},type=bind",
 	"workspaceFolder": "/${localWorkspaceFolderBasename}",

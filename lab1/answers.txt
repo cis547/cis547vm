@@ -1,4 +1,4 @@
-Answer the questions in this file after running AFL, IKOS and Gemini on the
+Answer the questions in this file after running AFL, IKOS, and Antigravity on the
 all the C programs. The questions are organized into two parts: Part A
 concerns with the performance of the tools on programs,
 and Part B concerns with the nature of the tools itself.
@@ -25,7 +25,7 @@ Lastly, use the above computed results to calculate Precision, Recall,
 and F-Measure scores for each analyzer on this suite of programs.
 
 =========================================================================================================
-| Program   | Ground Truth  |     AFL      | IKOS Interval |   IKOS DBM   |  Gemini (O)  |  Gemini (U)  |
+| Program   | Ground Truth  |     AFL      | IKOS Interval |   IKOS DBM   |  Antigravity (O)  |  Antigravity (U)  |
 |=======================================================================================================|
 | test0.c   |               |              |               |              |              |              |
 | test1.c   |               |              |               |              |              |              |
@@ -71,12 +71,12 @@ Answer:
 
 
 
-Question 5: From the given programs, can using Gemini be a sound analysis? Can it be complete?
+Question 5: From the given programs, can using Antigravity be a sound analysis? Can it be complete?
 Answer:
 
 
 
-Question 6: What was the difference between our two prompts for Gemini?
+Question 6: What was the difference between our two prompts for Antigravity?
 Comment on what the prompt encouraged and how it affected the output.
 Answer:
 

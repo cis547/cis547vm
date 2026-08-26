@@ -231,10 +231,15 @@ The container comes pre-loaded with the following software:
 
 We have also provided a folder named sandbox alongside the lab folders. Use this folder to play with the LLVM API.
 
-##### Setting up Gemini
+##### Setting up AI Assistants (Antigravity) 
 
-For Lab 1 and if you want to use the Gemini CLI yourself, you'll have to sign in.
-Run `gemini` and follow the instructions to sign into your UPenn email.
+The container comes with two AI coding assistant CLIs pre-installed:
+[Antigravity CLI][antigravity-cli] (`agy`, Google's successor to the Gemini CLI).
+
+For Lab 1, run `agy` and follow the instructions to sign into your UPenn email.
+
+Your logins are stored in a shared Docker volume, so you stay signed in
+across all labs and container rebuilds.
 
 ##### Installing Software on the Docker Image.
 
@@ -325,4 +330,5 @@ Ubuntu there are some other flavors of Linux on the left navigation panel.
 [vscode-remote-dev-extension]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
 [gdb]: https://www.gnu.org/software/gdb/
 [valgrind]: https://valgrind.org/
+[antigravity-cli]: https://antigravity.google/docs/cli/getting-started
 [docker-ubuntu]: https://docs.docker.com/engine/install/ubuntu/

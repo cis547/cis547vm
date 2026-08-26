@@ -17,6 +17,13 @@
 	"remoteEnv": {
 		"LD_LIBRARY_PATH": "${containerWorkspaceFolder}/build:${containerEnv:LD_LIBRARY_PATH}"
 	},
+	// Persist Gemini and Antigravity logins across container rebuilds. Antigravity keeps
+	// its tokens under ~/.gemini/antigravity-cli/, so one volume covers both CLIs.
+	// The named volume is shared by all lab containers: sign in once, stay signed in.
+	"mounts": [
+		"source=cis547-gemini,target=/root/.gemini,type=volume"
+	],
+
 	"workspaceMount": "source=${localWorkspaceFolder}/,target=/${localWorkspaceFolderBasename},type=bind",
 	"workspaceFolder": "/${localWorkspaceFolderBasename}",
 	// Set *default* container specific settings.json values on container create.
