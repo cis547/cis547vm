@@ -74,6 +74,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     npm install -g @google/gemini-cli && \
     curl -fsSL https://antigravity.google/cli/install.sh | bash
 
+# The Antigravity installer drops agy in ~/.local/bin and only exports it from the
+# shell rc files, so `make` recipes and other non-interactive shells cannot find it.
+ENV PATH="/root/.local/bin:${PATH}"
+
 # Set-up symlinks for LLVM-14 toolchain.
 RUN rm -rf /usr/bin/clang /usr/bin/clang++ /usr/bin/llvm-config /usr/bin/opt && \
     ln -s /usr/bin/clang-14 /usr/bin/clang && \
