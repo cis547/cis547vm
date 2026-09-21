@@ -5,7 +5,7 @@
 
 const int STR_MAX_SIZE = 1024;
 
-const char *getBinOpName(char symbol) {
+const char* getBinOpName(char symbol) {
   switch (symbol) {
     case '+':
       return "Addition";
@@ -22,7 +22,7 @@ const char *getBinOpName(char symbol) {
   }
 }
 
-void get_logfile(char *buf, const int buf_size, const char *ext) {
+void get_logfile(char* buf, const int buf_size, const char* ext) {
   char exe[STR_MAX_SIZE];
   int ret = readlink("/proc/self/exe", exe, sizeof(exe) - 1);
   if (ret == -1) {
@@ -43,7 +43,7 @@ void get_logfile(char *buf, const int buf_size, const char *ext) {
 void __coverage__(int line, int col) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".cov");
-  FILE *f = fopen(logfile, "a");
+  FILE* f = fopen(logfile, "a");
   fprintf(f, "%d, %d\n", line, col);
   fclose(f);
 }
@@ -51,7 +51,7 @@ void __coverage__(int line, int col) {
 void __binop_op__(char c, int line, int col, int op1, int op2) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".binops");
-  FILE *f = fopen(logfile, "a");
+  FILE* f = fopen(logfile, "a");
   fprintf(f,
       "%s on Line %d, Column %d with first operand=%d and second operand=%d\n",
       getBinOpName(c),

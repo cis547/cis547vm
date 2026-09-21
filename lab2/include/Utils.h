@@ -24,6 +24,6 @@ const std::string getBinOpName(const char symbol);
 /**
  * Get a human-readable string name for an llvm Value
  */
-std::string variable(Value *V);
+std::string variable(Value* V);
 
 #endif  // UTILS_H

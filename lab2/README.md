@@ -63,6 +63,8 @@ make test1
 
 This exercise requires careful attention to detail. Small differences in C code can produce different LLVM IR, so you'll need to match the exact structure of the target IR files. This hands-on experience will prove invaluable when debugging LLVM passes later in the course.
 
+**Note on ARM machines:** the provided `ir_programs/*.ll` files were generated on x86_64. If you're running the devcontainer on an ARM host, your generated `.ll` may show harmless architectural differences from the target IR - for example, in the `target datalayout`/`target triple` lines, or in struct/type layout and padding. These differences are expected and are not something you need to fix. The autograder builds and runs on x86_64, so treat it as the ground truth for whether your C program is correct, not a local `diff` against the target `.ll` file.
+
 ## Part 2: Understanding the LLVM API
 
 **Task:** Implement static and dynamic analysis passes using the LLVM API to detect and analyze binary operators in programs.

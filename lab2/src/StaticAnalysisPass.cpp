@@ -8,10 +8,10 @@ namespace instrument {
 
 const auto PASS_DESC = "Static Analysis Pass";
 
-PreservedAnalyses StaticAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) {
+PreservedAnalyses StaticAnalysisPass::run(Module& M, ModuleAnalysisManager& AM) {
   outs() << "Running " << PASS_DESC << " on module " << M.getName() << "\n";
 
-  for (auto &F : M) {
+  for (auto& F : M) {
     if (F.isDeclaration())
       continue;
 
@@ -20,7 +20,7 @@ PreservedAnalyses StaticAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) 
 
     outs() << "Locating Instructions\n";
     for (inst_iterator Iter = inst_begin(F), E = inst_end(F); Iter != E; ++Iter) {
-      Instruction &Inst = (*Iter);
+      Instruction& Inst = (*Iter);
       llvm::DebugLoc DebugLoc = Inst.getDebugLoc();
       if (!DebugLoc) {
         // Skip Instruction if it doesn't have debug information.
@@ -43,10 +43,10 @@ PreservedAnalyses StaticAnalysisPass::run(Module &M, ModuleAnalysisManager &AM) 
 
 // Pass registration for the new pass manager
 extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo llvmGetPassPluginInfo() {
-  return {LLVM_PLUGIN_API_VERSION, "StaticAnalysisPass", "1.0.0", [](PassBuilder &PB) {
+  return {LLVM_PLUGIN_API_VERSION, "StaticAnalysisPass", "1.0.0", [](PassBuilder& PB) {
             PB.registerPipelineParsingCallback(
                 [](StringRef Name,
-                    ModulePassManager &MPM,
+                    ModulePassManager& MPM,
                     ArrayRef<PassBuilder::PipelineElement>) {
                   if (Name == "StaticAnalysisPass") {
                     MPM.addPass(StaticAnalysisPass());

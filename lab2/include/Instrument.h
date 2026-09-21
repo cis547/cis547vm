@@ -13,11 +13,11 @@ using namespace llvm;
 namespace instrument {
 
 struct StaticAnalysisPass : public PassInfoMixin<StaticAnalysisPass> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  PreservedAnalyses run(Module& M, ModuleAnalysisManager& AM);
 };
 
 struct DynamicAnalysisPass : public PassInfoMixin<DynamicAnalysisPass> {
-  PreservedAnalyses run(Module &M, ModuleAnalysisManager &AM);
+  PreservedAnalyses run(Module& M, ModuleAnalysisManager& AM);
 };
 
 }  // namespace instrument

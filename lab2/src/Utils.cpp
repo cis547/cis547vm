@@ -5,7 +5,7 @@
 
 using namespace llvm;
 
-const char *WHITESPACES = " \t\n\r";
+const char* WHITESPACES = " \t\n\r";
 
 char getBinOpSymbol(Instruction::BinaryOps Opcode) {
   switch (Opcode) {
@@ -48,7 +48,7 @@ const std::string getBinOpName(const char symbol) {
   }
 }
 
-std::string variable(Value *V) {
+std::string variable(Value* V) {
   std::string Code;
   raw_string_ostream SS(Code);
   V->print(SS);
