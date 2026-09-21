@@ -5,7 +5,7 @@
 
 const int STR_MAX_SIZE = 1024;
 
-void get_logfile(char *buf, const int buf_size, const char *ext) {
+void get_logfile(char* buf, const int buf_size, const char* ext) {
   char exe[STR_MAX_SIZE];
   int ret = readlink("/proc/self/exe", exe, sizeof(exe) - 1);
   if (ret == -1) {
@@ -17,7 +17,7 @@ void get_logfile(char *buf, const int buf_size, const char *ext) {
   int len = strlen(exe);
   strncpy(buf, exe, len);
   buf[len] = 0;
-  for (int i = 0; i <= strlen(ext); ++i) {
+  for (unsigned i = 0; i <= strlen(ext); ++i) {
     buf[buf_size - (i + 1)] = 0;
   }
   strncat(buf, ext, strlen(ext));
@@ -33,7 +33,7 @@ void __sanitize__(int divisor, int line, int col) {
 void __coverage__(int line, int col) {
   char logfile[STR_MAX_SIZE];
   get_logfile(logfile, sizeof(logfile), ".cov");
-  FILE *f = fopen(logfile, "a");
+  FILE* f = fopen(logfile, "a");
   fprintf(f, "%d, %d\n", line, col);
   fclose(f);
 }

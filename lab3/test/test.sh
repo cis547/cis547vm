@@ -16,4 +16,4 @@ rm -rf "$OUT_DIR" "output_$1.txt"
 mkdir -p "$OUT_DIR"
 
 
-timeout "$TIME" ../build/fuzzer "$TARGET" "$FUZZ_SEED_DIR" "$OUT_DIR" "--freq $FREQ" --seed "$SEED" --dict "fuzzing_dict_$1" > "output_$1.txt" || :
+timeout "$TIME" ../build/fuzzer "$TARGET" "$FUZZ_SEED_DIR" "$OUT_DIR" --freq "$FREQ" --seed "$SEED" --dict "fuzzing_dict_$1" > "output_$1.txt" || :

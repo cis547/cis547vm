@@ -1,6 +1,9 @@
 *.cov
 build/
 test/*.ll
+!test/dictionary_public.ll
+!test/cmplog_public.ll
+*.log
 submission.zip
 
 # Test results

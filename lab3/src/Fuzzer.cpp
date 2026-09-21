@@ -1,26 +1,39 @@
 /**
  * NOTE: You should feel free to manipulate any content in this .cpp file.
  * This means that if you want you can change almost everything,
- * as long as the fuzzer runs with the same cli interface.
+ * as long as the fuzzer runs with the same cli interface. Preserve the public
+ * applyDictionaryEntry interface in DictionaryMutation.h/DictionaryMutation.cpp
+ * and use it when implementing dictionary mutations.
+ * Preserve PowerSchedule, PowerScheduler, SeedInputs, MutationFns, RunInfo's
+ * fields, and the fuzzOneBatch entry point used by the deterministic scheduler
+ * checker. The checker supplies corpus entries, mutation functions, and the
+ * target interfaces declared in Utils.h.
  * This also means that if you're happy with some of the provided default
  * implementation, you don't have to modify it.
  */
 
+#include "DictionaryMutation.h"
+#include "PowerSchedule.h"
 #include "Utils.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <algorithm>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <iterator>
-#include <limits.h>
+#include <map>
+#include <set>
 #include <stdio.h>
 #include <string>
 #include <time.h>
 #include <unistd.h>
+#include <utility>
+#include <vector>
 
 #define ARG_EXIST_CHECK(Name, Arg)                                                       \
   {                                                                                      \
@@ -53,7 +66,7 @@ typedef std::string MutationFn(std::string);
  */
 struct RunInfo {
   bool Passed;
-  MutationFn *Mutation;
+  MutationFn* Mutation;
   std::string Input, MutatedInput;
 };
 
@@ -61,11 +74,14 @@ struct RunInfo {
 /*            Global state variables            */
 /************************************************/
 /**
- * Note: Feel free to add/remove/change any of the following variables.
- * Depending on what you want to keep track of during fuzzing.
+ * Preserve the scheduler interfaces listed above. Other globals can change
+ * depending on what you want to keep track of during fuzzing.
  */
 // Collection of strings used to generate inputs
 std::vector<std::string> SeedInputs;
+
+// Scheduling metadata uses the complete input bytes as a stable seed identity.
+instrument::PowerSchedule PowerScheduler;
 
 // Variable to store coverage related information.
 std::vector<std::string> CoverageState;
@@ -153,7 +169,7 @@ std::string mutationB(std::string Original) {
  * Get creative with your strategies.
  */
 
-std::set<std::pair<std::string, int>> FuzzingDict;
+instrument::Dictionary FuzzingDict;
 
 std::string mutationDictDeterministic(std::string Original) {
   // TODO: Insert/overwrite entries at multiple indices
@@ -175,7 +191,7 @@ std::string mutationDictRandom(std::string Original) {
  * For example if you implement mutationC then update it to be:
  * std::vector<MutationFn *> MutationFns = {mutationA, mutationB, mutationC};
  */
-std::vector<MutationFn *> MutationFns = {
+std::vector<MutationFn*> MutationFns = {
     mutationA,
     mutationB,
 };
@@ -191,7 +207,7 @@ std::vector<MutationFn *> MutationFns = {
  * @param RunInfo struct with information about the current run.
  * @returns a pointer to a MutationFn
  */
-MutationFn *selectMutationFn(RunInfo &Info) {
+MutationFn* selectMutationFn(RunInfo& Info) {
   int Strat = rand() % MutationFns.size();
 
   return MutationFns[Strat];
@@ -206,9 +222,14 @@ MutationFn *selectMutationFn(RunInfo &Info) {
  * @param Target name of target binary
  * @param Info RunInfo
  */
-void feedBack(std::string &Target, RunInfo &Info) {
+void feedBack(std::string& Target, RunInfo& Info) {
   std::vector<std::string> RawCoverageData;
   readCoverageFile(Target, RawCoverageData);
+
+  // Every execution contributes to shared frequency, even if its input is
+  // discarded or crashes. Coverage normalization is provided by the lab.
+  auto Signature = instrument::makeCoverageSignature(RawCoverageData);
+  PowerScheduler.observeExecution(Signature);
 
   PrevCoverageState = CoverageState;
   CoverageState.clear();
@@ -227,13 +248,20 @@ void feedBack(std::string &Target, RunInfo &Info) {
    */
   CoverageState.assign(RawCoverageData.begin(),
       RawCoverageData.end());  // No extra processing
+
+  // Admission and execution accounting are separate: registering a retained
+  // input must not count this execution a second time or reset an existing seed.
+  if (std::find(SeedInputs.begin(), SeedInputs.end(), Info.MutatedInput) !=
+      SeedInputs.end()) {
+    PowerScheduler.registerSeed(Info.MutatedInput, Signature);
+  }
 }
 
 int Freq = 1000;
 int Count = 0;
 int PassCount = 0;
 
-bool test(std::string &Target, std::string &Input, std::string &OutDir) {
+bool test(std::string& Target, std::string& Input, std::string& OutDir) {
   // Clean up old coverage file before running
   std::string CoveragePath = Target + ".cov";
   std::remove(CoveragePath.c_str());
@@ -255,16 +283,33 @@ bool test(std::string &Target, std::string &Input, std::string &OutDir) {
   }
 }
 
+// Provided calibration records each distinct initial seed's coverage once.
+// It does not select seeds for mutation or consume random numbers.
+void calibrateSeedInputs(std::string& Target, std::string& OutDir) {
+  std::set<std::string> Calibrated;
+  for (std::string Input : SeedInputs) {
+    if (!Calibrated.insert(Input).second) {
+      continue;
+    }
+    test(Target, Input, OutDir);
+    std::vector<std::string> RawCoverageData;
+    readCoverageFile(Target, RawCoverageData);
+    auto Signature = instrument::makeCoverageSignature(RawCoverageData);
+    PowerScheduler.observeExecution(Signature);
+    PowerScheduler.registerSeed(Input, Signature);
+  }
+}
+
 /**
- * @brief Fuzz the Target program and store the results to OutDir
+ * @brief Select one parent and spend its AFLFast mutation budget.
  *
- * @param Target Target (instrumented) program binary.
- * @param OutDir Directory to store fuzzing results.
+ * Preserve this entry point for the deterministic scheduling checker.
  */
-void fuzz(std::string Target, std::string OutDir) {
-  struct RunInfo Info;
-  while (true) {
-    std::string Input = selectInput(Info);
+void fuzzOneBatch(std::string& Target, std::string& OutDir, RunInfo& Info) {
+  const std::string Input = selectInput(Info);
+  // TODO: Obtain this seed's energy budget from PowerScheduler.
+  const uint32_t Energy = 1;
+  for (uint32_t Iteration = 0; Iteration < Energy; ++Iteration) {
     Info = RunInfo();
     Info.Input = Input;
     Info.Mutation = selectMutationFn(Info);
@@ -275,14 +320,26 @@ void fuzz(std::string Target, std::string OutDir) {
 }
 
 /**
- * Usage:
- * ./fuzzer [target] [seed input dir] [output dir] [frequency] [random seed]
+ * @brief Fuzz the Target program and store the results to OutDir.
  */
-int main(int argc, char **argv) {
+void fuzz(std::string Target, std::string OutDir) {
+  calibrateSeedInputs(Target, OutDir);
+  RunInfo Info{};
+  while (true) {
+    fuzzOneBatch(Target, OutDir, Info);
+  }
+}
+
+/**
+ * Usage:
+ * ./fuzzer [target] [seed input dir] [output dir]
+ *          [--freq frequency] [--seed random seed] [--dict dictionary dir]
+ */
+int main(int argc, char** argv) {
   if (argc < 4) {
     printf(
-        "usage %s [target] [seed input dir] [output dir] [frequency "
-        "(optional)] [seed (optional arg)]\n",
+        "usage %s [target] [seed input dir] [output dir] "
+        "[--freq frequency] [--seed random-seed] [--dict dictionary-dir]\n",
         argv[0]);
     return 1;
   }

@@ -1,0 +1,11 @@
+Project: json-parser
+Repository: https://github.com/json-parser/json-parser
+Revision: 8ac4477ad3e63dc107e17ad49484edaa17d18d35
+
+json.c and json.h are copied verbatim from that revision. Their upstream Git
+blob IDs are:
+
+  json.c  deef49ff3fb932ee77d907f5f60cda14993e1dd4
+  json.h  1f6431614c155049a41398d21ad279ccbbc69eff
+
+See LICENSE for the license text carried in both upstream source files.

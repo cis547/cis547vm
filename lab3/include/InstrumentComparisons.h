@@ -1,11 +1,11 @@
 #pragma once
 
-#include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
 
 namespace instrument {
 
-struct InstrumentDivision : public llvm::PassInfoMixin<InstrumentDivision> {
+class InstrumentComparisons : public llvm::PassInfoMixin<InstrumentComparisons> {
+ public:
   llvm::PreservedAnalyses run(llvm::Module& M, llvm::ModuleAnalysisManager& AM);
 };
 
