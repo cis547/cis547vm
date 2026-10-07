@@ -114,6 +114,7 @@ std::optional<instrument::DictionaryEntry> readDictionaryEntry(
     result.push_back(byte);
   }
 
+  // Parse the filename's @offset suffix as an optional input byte offset.
   std::optional<uint64_t> hint;
   size_t atPos = filename.find_last_of('@');
   size_t indexEnd = atPos == std::string::npos ? filename.size() : atPos;

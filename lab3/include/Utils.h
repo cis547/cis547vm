@@ -84,6 +84,10 @@ int runTarget(std::string& Target, std::string& Input);
 /**
  * @brief Read dictionary entries from files in a folder.
  *
+ * Files contain raw token bytes. The optional @offset suffix in entry_N@offset
+ * becomes DictionaryEntry.positionHint, a zero-based byte offset in the input.
+ * The filename entry_N has no hint, while entry_N@0 has a valid hint of zero.
+ *
  * @param folder Path to the folder containing dictionary files.
  * @return Dictionary Set of raw-byte entries and optional position hints.
  */

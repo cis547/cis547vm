@@ -65,7 +65,7 @@ std::optional<std::string> BuildDictionaryPass::readFlatGlobal(
 
 std::optional<std::string> BuildDictionaryPass::resolveGlobalSlice(
     Value* value, const DataLayout& layout) const {
-  // TODO: Implement.
+  // TODO: Read the bytes from a global array at the pointer's constant offset.
   (void)value;
   (void)layout;
   return std::nullopt;
