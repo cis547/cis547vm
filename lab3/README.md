@@ -426,7 +426,7 @@ that automatically builds a dictionary for your fuzzer. The pass must write a
 flat `fuzzing_dict` directory. Each file is named `entry_N` for an unpositioned
 token or `entry_N@offset` for a token that should be placed at the given
 nonnegative byte offset. File contents are the raw token bytes; they are not
-text escapes or C strings. Filenames and enumeration order have no semantic
+text escapes or C strings. The index `N` and enumeration order have no semantic
 meaning.
 
 Your dictionary construction must implement the following behavior:
@@ -455,6 +455,12 @@ Your dictionary construction must implement the following behavior:
   local byte-array allocation, or a direct constant-offset input-buffer
   argument to `strcmp`, `strncmp`, or `memcmp`. Entries whose positions cannot
   be established locally must remain unhinted. `strstr` entries are unhinted.
+
+An offset into a constant operand selects the **source bytes** of a token.
+The input-buffer offset determines its **position hint**. For example,
+`memcmp(buf + 5, "xxMAGIC" + 2, 5)`, with `buf` satisfying the local rules
+above, contributes token `MAGIC` with position hint 5. The offset 2 slices
+the constant and does not describe where the token belongs in the fuzz input.
 
 You may emit additional entries when they obey the format. Every entry must be
 between 1 and 1024 bytes, every hint must be a nonnegative decimal integer, and
@@ -880,4 +886,4 @@ The same seed value will be used for all test cases.
 [static-aid-paper]: https://schmiste.github.io/raid17.pdf
 [cmplog-docs]: https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.cmplog.md
 [redqueen-paper]: https://www.ndss-symposium.org/ndss-paper/redqueen-fuzzing-with-input-to-state-correspondence/
-[aflfast-paper]: https://www.comp.nus.edu.sg/~abhik/pdf/CCS16.pdf
+[aflfast-paper]: https://abhikrc.com/pdf/CCS16.pdf
