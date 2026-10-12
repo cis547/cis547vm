@@ -1,0 +1,4 @@
+Write your prompt here. Your llm_localize.py reads this file and uses it for
+every test program, so it must work for any program. Design how the
+program's name and source code get into the prompt, and implement that
+in build_prompt.
