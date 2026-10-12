@@ -23,7 +23,7 @@ submit: clean
 	@rm -f submission.zip
 	@echo "Creating submission..."
 	@chown -R --reference=Makefile .
-	zip -r /tmp/submission.zip cbi/* setup.py requirements.txt Makefile CMakeLists.txt include/* lib/* src/* 2> /dev/null
+	zip -r /tmp/submission.zip cbi/* setup.py requirements.txt Makefile CMakeLists.txt include/* lib/* src/* llm lab5_writeup.md 2> /dev/null
 	@mv /tmp/submission.zip submission.zip
 	@chown -R --reference=Makefile submission.zip
 	@echo "submission zip created."
@@ -50,3 +50,4 @@ clean-test:
 clean: clean-package clean-instrumentation
 	@echo "Removing submission.zip"
 	rm -f ./submission.zip
+
