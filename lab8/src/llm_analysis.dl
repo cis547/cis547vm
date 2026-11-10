@@ -1,0 +1,46 @@
+/*
+ * Source-level taint analysis over facts that an LLM extracts from C source.
+ *
+ * Each statement is named by its source line, such as "L13". Variables are
+ * named as they appear in the C source, such as "y".
+ */
+
+/* Facts from the LLM */
+.decl def(var: symbol, stmt: symbol)
+.decl use(var: symbol, stmt: symbol)
+.decl next(stmt: symbol, next_stmt: symbol)
+.decl taint(stmt: symbol)
+.decl sanitizer(stmt: symbol)
+.decl div(var: symbol, stmt: symbol)
+
+.input def
+.input use
+.input next
+.input taint
+.input sanitizer
+.input div
+
+/* Reaching definition analysis */
+.decl kill(curr_stmt: symbol, old_stmt: symbol)
+.decl in(stmt: symbol, def_stmt: symbol)
+.decl out(stmt: symbol, def_stmt: symbol)
+
+.output kill
+.output in
+.output out
+
+kill(curr_stmt, old_stmt) :- def(var, curr_stmt), def(var, old_stmt).
+out(stmt, stmt) :- def(_, stmt).
+out(stmt, def_stmt) :- in(stmt, def_stmt), !kill(stmt, def_stmt).
+in(stmt, def_stmt) :- out(prev_stmt, def_stmt), next(prev_stmt, stmt).
+
+/* Taint analysis */
+.decl edge(from: symbol, to: symbol)
+.decl path(from: symbol, to: symbol)
+.decl alarm(stmt: symbol)
+
+.output edge
+.output path
+.output alarm
+
+/* TODO: Add the rules for source-level taint analysis */

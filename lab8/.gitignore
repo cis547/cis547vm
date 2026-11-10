@@ -8,6 +8,14 @@ test/*/input
 test/*/output
 test/*/err
 test/*/out
+test/*/llm-output
 
 # Core dumps
 core.*
+
+# LLM run outputs (submitted by make submit, not tracked)
+llm/samples/
+llm/facts/
+
+# Python bytecode from running llm/llm_extract.py
+__pycache__/
